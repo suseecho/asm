@@ -1,0 +1,1226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0042)http://www.perpetualpc.net/perms_poss.html -->
+<html style=""><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+
+<link rel="SHORTCUT ICON" href="http://www.perpetualpc.net/favicon.ico">
+
+<title>how many possible file permission combinations linux</title>
+
+<!--GNU/Linux command listing and reference. Author David Tarsi 09.19.2002
+editor used: gvim  system: RedHat Linux 7.3 you are free to copy this file under the terms
+of the GPL-->
+
+<style type="text/css">
+
+body{background-color: #ffffff; color:#0000ff; font-size:12pt; font-family: Helvetica,Arial,serif;font-weight:bold}
+A:link{background-color: #ffffff; color: #5c4033}
+A:visited{background-color: #ffffff; color: #4b0082}
+A:hover{background-color: #ffffff; color: #32cd32}
+div.groupone {font-size: 12pt;  font-family: Helvetica,Arial,serif; color: #000000;background-color:#ffffff}
+div.grouptwo{font-size:18pt; font-family: Helvetica,Arial,serif; color:#0000ff; background-color:#ffffff; line-height: 15pt}
+div.groupthree {font-size: 13pt; font-family: Helvetica,Arial,serif; color: #000000;background-color:#ffffff}
+div.groupfour {font-size: 14pt; font-family: Helvetica,Arial,serif; color: #8b4513;background-color:#ffffff; font-weight:bold}
+i.groupfive {font-size: 16pt; font-family: Helvetica,Arial,serif; color: #ff0000;background-color:#ffffff; font-weight:bold}
+div.groupsix {font-size: 14pt; font-family: Helvetica,Arial,serif; color: #0000ff;background-color:#ffffff; font-weight:bold}
+span.groupthree{background-color: #ffffff; color:#000000; font-size:16pt; font-family: Helvetica,Arial,serif;font-weight:bold}
+span.groupfour{background-color: #ffffff; color:#00cc00; font-size:16pt; font-family: Helvetica,Arial,serif;font-weight:bold}
+span.groupseven{background-color: #ffffff; color:#990066; font-size:20pt; font-family: Helvetica,Arial,serif;font-weight:bold}
+
+
+
+
+</style>
+
+</head>
+
+
+<body bgcolor="#ffffff">
+
+<table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" summary="table for commands">
+
+<tbody><tr><td>
+
+ <table width="100%" border="0" cellpadding="0" cellspacing="0" summary="table for holding web page samples">
+      <tbody><tr>
+        <td align="center" bgcolor="#ffffff">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" summary="table for logo and decor">
+            <tbody><tr>
+              <td valign="top">
+                <span class="groupseven">Perpetual PC's</span><br><br>
+		<span class="groupthree">Web Site Design. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Networks.</span> 
+		</td>
+		<td align="right">
+		<!--<img src="images/north_small.jpg" alt="San Juan Islands">-->
+ 
+                </td>
+            </tr>
+          </tbody></table>
+        </td>
+      </tr>
+	<tr><td bgcolor="#000000" valign="top" height="8"></td></tr><!--top color lines-->
+
+	<tr><td bgcolor="#00cc00" valign="top" height="8"></td></tr><!--top color lines-->
+       </tbody></table>
+</td>
+
+</tr><tr><td height="25"><br><div class="grouptwo">Commands and references ( GNU / linux kernel 2.4.18-3 and
+ 2.4.18-14 ) &nbsp;&nbsp;
+
+<br></div><div class="groupone">Linux is a registered trademark of Linus Torvalds</div><br><br>
+
+The commands with their most common usage
+are in brackets like this: [ command ].<br>
+Don't type the brackets, just what is inside of them.<br><br>
+
+
+<a href="http://www.perpetualpc.net/srtd_commands_rev.html">Back to the index page</a><br><br>
+
+<hr>
+
+</td>
+</tr>
+
+<tr>
+<td align="left" valign="top">
+
+
+					
+	<div class="groupthree">
+
+<!--insert content here -->
+How many file permissions are possible running Linux?
+I have put together this list of permissions and chmod commands using octal numbers from 0-7 that 
+produce them.The numbers to the left of the symbolic
+permission listings are the octal numbers used in the command.<br>
+For example:<br>
+on the eighth entry down below on the right side
+ you see the number 10 next to  - - - - - - x - - -
+that would be the result of the command:<br><br>
+[ chmod 10 file_name ]<br>used to change the permissions on a file
+called file_name.<br><br>
+here is the script I used to generate all the permissions: ( its not perfect, it also loops through the 8's and 9's) <br>
+<pre>#!/bin/sh
+
+#modds.sh
+#loops through a chmod sequence
+
+counting_function(){
+foo=1
+touch file_one
+while [ "$foo" -ne 7777 ];
+do
+echo $foo &gt;&gt; results
+chmod $foo file_one
+ls -gG &gt;&gt; results
+foo=$(($foo+1))
+done
+}
+counting_function
+egrep -v '(modds.sh)|(total)|(results)' results &gt; results1
+echo "now use gnumeric to sort out the columns in the results1 
+file.Then use grep to eliminate the 8s and 9s from the remaining list."
+
+exit 0
+</pre><br><br>
+
+if you have a sorted file with a single column structured like this(it could have hundreds of lines)with digits 
+from 0 to 7:
+<pre>1
+---------x
+2
+--------w-
+3
+--------wx
+4
+-------r--
+5
+-------r-x
+6
+-------rw-
+7
+-------rwx
+-------rwx
+-------rwx
+10
+------x---
+11
+------x--x
+12
+------x-w-
+13
+------x-wx
+14
+------xr--
+</pre><br>
+do this to sort out the numbers and non-integer values:<br><br>
+[ grep -o '[01234567]*' ] &nbsp; this displays all the numbers<br>
+[ grep -v '[01234567]' ] &nbsp; this displays all the non-integer values <br><br>
+the S and s refer to set Group ID<br>
+The lower case s means both group execute and sgid<br>
+The upper case S means only sgid
+r means read
+x means execute
+w means write
+
+the T and t refer to sticky bit
+<pre>
+each - referes to aspecs of the permissions:
+
+  -      ---         ---        ---
+ type   owner       group      others
+</pre>
+<br><br>
+<pre>These are possible combinations generated by the system ( kernel 2.4.20-6 ) 
+with octal numbers. I have not tried them all. Some may not be usable.
+
+
+1  ---------x   |  2001  ------S--x   |  4001  ---S-----x   |  6001  ---S--S--x 
+2  --------w-   |  2002  ------S-w-   |  4002  ---S----w-   |  6002  ---S--S-w- 
+3  --------wx   |  2003  ------S-wx   |  4003  ---S----wx   |  6003  ---S--S-wx 
+4  -------r--   |  2004  ------Sr--   |  4004  ---S---r--   |  6004  ---S--Sr-- 
+5  -------r-x   |  2005  ------Sr-x   |  4005  ---S---r-x   |  6005  ---S--Sr-x 
+6  -------rw-   |  2006  ------Srw-   |  4006  ---S---rw-   |  6006  ---S--Srw- 
+7  -------rwx   |  2007  ------Srwx   |  4007  ---S---rwx   |  6007  ---S--Srwx 
+10  ------x---   |  2010  ------s---   |  4010  ---S--x---   |  6010  ---S--s--- 
+11  ------x--x   |  2011  ------s--x   |  4011  ---S--x--x   |  6011  ---S--s--x 
+12  ------x-w-   |  2012  ------s-w-   |  4012  ---S--x-w-   |  6012  ---S--s-w- 
+13  ------x-wx   |  2013  ------s-wx   |  4013  ---S--x-wx   |  6013  ---S--s-wx 
+14  ------xr--   |  2014  ------sr--   |  4014  ---S--xr--   |  6014  ---S--sr-- 
+15  ------xr-x   |  2015  ------sr-x   |  4015  ---S--xr-x   |  6015  ---S--sr-x 
+16  ------xrw-   |  2016  ------srw-   |  4016  ---S--xrw-   |  6016  ---S--srw- 
+17  ------xrwx   |  2017  ------srwx   |  4017  ---S--xrwx   |  6017  ---S--srwx 
+20  -----w----   |  2020  -----wS---   |  4020  ---S-w----   |  6020  ---S-wS--- 
+21  -----w---x   |  2021  -----wS--x   |  4021  ---S-w---x   |  6021  ---S-wS--x 
+22  -----w--w-   |  2022  -----wS-w-   |  4022  ---S-w--w-   |  6022  ---S-wS-w- 
+23  -----w--wx   |  2023  -----wS-wx   |  4023  ---S-w--wx   |  6023  ---S-wS-wx 
+24  -----w-r--   |  2024  -----wSr--   |  4024  ---S-w-r--   |  6024  ---S-wSr-- 
+25  -----w-r-x   |  2025  -----wSr-x   |  4025  ---S-w-r-x   |  6025  ---S-wSr-x 
+26  -----w-rw-   |  2026  -----wSrw-   |  4026  ---S-w-rw-   |  6026  ---S-wSrw- 
+27  -----w-rwx   |  2027  -----wSrwx   |  4027  ---S-w-rwx   |  6027  ---S-wSrwx 
+30  -----wx---   |  2030  -----ws---   |  4030  ---S-wx---   |  6030  ---S-ws--- 
+31  -----wx--x   |  2031  -----ws--x   |  4031  ---S-wx--x   |  6031  ---S-ws--x 
+32  -----wx-w-   |  2032  -----ws-w-   |  4032  ---S-wx-w-   |  6032  ---S-ws-w- 
+33  -----wx-wx   |  2033  -----ws-wx   |  4033  ---S-wx-wx   |  6033  ---S-ws-wx 
+34  -----wxr--   |  2034  -----wsr--   |  4034  ---S-wxr--   |  6034  ---S-wsr-- 
+35  -----wxr-x   |  2035  -----wsr-x   |  4035  ---S-wxr-x   |  6035  ---S-wsr-x 
+36  -----wxrw-   |  2036  -----wsrw-   |  4036  ---S-wxrw-   |  6036  ---S-wsrw- 
+37  -----wxrwx   |  2037  -----wsrwx   |  4037  ---S-wxrwx   |  6037  ---S-wsrwx 
+40  ----r-----   |  2040  ----r-S---   |  4040  ---Sr-----   |  6040  ---Sr-S--- 
+41  ----r----x   |  2041  ----r-S--x   |  4041  ---Sr----x   |  6041  ---Sr-S--x 
+42  ----r---w-   |  2042  ----r-S-w-   |  4042  ---Sr---w-   |  6042  ---Sr-S-w- 
+43  ----r---wx   |  2043  ----r-S-wx   |  4043  ---Sr---wx   |  6043  ---Sr-S-wx 
+44  ----r--r--   |  2044  ----r-Sr--   |  4044  ---Sr--r--   |  6044  ---Sr-Sr-- 
+45  ----r--r-x   |  2045  ----r-Sr-x   |  4045  ---Sr--r-x   |  6045  ---Sr-Sr-x 
+46  ----r--rw-   |  2046  ----r-Srw-   |  4046  ---Sr--rw-   |  6046  ---Sr-Srw- 
+47  ----r--rwx   |  2047  ----r-Srwx   |  4047  ---Sr--rwx   |  6047  ---Sr-Srwx 
+50  ----r-x---   |  2050  ----r-s---   |  4050  ---Sr-x---   |  6050  ---Sr-s--- 
+51  ----r-x--x   |  2051  ----r-s--x   |  4051  ---Sr-x--x   |  6051  ---Sr-s--x 
+52  ----r-x-w-   |  2052  ----r-s-w-   |  4052  ---Sr-x-w-   |  6052  ---Sr-s-w- 
+53  ----r-x-wx   |  2053  ----r-s-wx   |  4053  ---Sr-x-wx   |  6053  ---Sr-s-wx 
+54  ----r-xr--   |  2054  ----r-sr--   |  4054  ---Sr-xr--   |  6054  ---Sr-sr-- 
+55  ----r-xr-x   |  2055  ----r-sr-x   |  4055  ---Sr-xr-x   |  6055  ---Sr-sr-x 
+56  ----r-xrw-   |  2056  ----r-srw-   |  4056  ---Sr-xrw-   |  6056  ---Sr-srw- 
+57  ----r-xrwx   |  2057  ----r-srwx   |  4057  ---Sr-xrwx   |  6057  ---Sr-srwx 
+60  ----rw----   |  2060  ----rwS---   |  4060  ---Srw----   |  6060  ---SrwS--- 
+61  ----rw---x   |  2061  ----rwS--x   |  4061  ---Srw---x   |  6061  ---SrwS--x 
+62  ----rw--w-   |  2062  ----rwS-w-   |  4062  ---Srw--w-   |  6062  ---SrwS-w- 
+63  ----rw--wx   |  2063  ----rwS-wx   |  4063  ---Srw--wx   |  6063  ---SrwS-wx 
+64  ----rw-r--   |  2064  ----rwSr--   |  4064  ---Srw-r--   |  6064  ---SrwSr-- 
+65  ----rw-r-x   |  2065  ----rwSr-x   |  4065  ---Srw-r-x   |  6065  ---SrwSr-x 
+66  ----rw-rw-   |  2066  ----rwSrw-   |  4066  ---Srw-rw-   |  6066  ---SrwSrw- 
+67  ----rw-rwx   |  2067  ----rwSrwx   |  4067  ---Srw-rwx   |  6067  ---SrwSrwx 
+70  ----rwx---   |  2070  ----rws---   |  4070  ---Srwx---   |  6070  ---Srws--- 
+71  ----rwx--x   |  2071  ----rws--x   |  4071  ---Srwx--x   |  6071  ---Srws--x 
+72  ----rwx-w-   |  2072  ----rws-w-   |  4072  ---Srwx-w-   |  6072  ---Srws-w- 
+73  ----rwx-wx   |  2073  ----rws-wx   |  4073  ---Srwx-wx   |  6073  ---Srws-wx 
+74  ----rwxr--   |  2074  ----rwsr--   |  4074  ---Srwxr--   |  6074  ---Srwsr-- 
+75  ----rwxr-x   |  2075  ----rwsr-x   |  4075  ---Srwxr-x   |  6075  ---Srwsr-x 
+76  ----rwxrw-   |  2076  ----rwsrw-   |  4076  ---Srwxrw-   |  6076  ---Srwsrw- 
+77  ----rwxrwx   |  2077  ----rwsrwx   |  4077  ---Srwxrwx   |  6077  ---Srwsrwx 
+100  ---x------   |  2100  ---x--S---   |  4100  ---s------   |  6100  ---s--S--- 
+101  ---x-----x   |  2101  ---x--S--x   |  4101  ---s-----x   |  6101  ---s--S--x 
+102  ---x----w-   |  2102  ---x--S-w-   |  4102  ---s----w-   |  6102  ---s--S-w- 
+103  ---x----wx   |  2103  ---x--S-wx   |  4103  ---s----wx   |  6103  ---s--S-wx 
+104  ---x---r--   |  2104  ---x--Sr--   |  4104  ---s---r--   |  6104  ---s--Sr-- 
+105  ---x---r-x   |  2105  ---x--Sr-x   |  4105  ---s---r-x   |  6105  ---s--Sr-x 
+106  ---x---rw-   |  2106  ---x--Srw-   |  4106  ---s---rw-   |  6106  ---s--Srw- 
+107  ---x---rwx   |  2107  ---x--Srwx   |  4107  ---s---rwx   |  6107  ---s--Srwx 
+110  ---x--x---   |  2110  ---x--s---   |  4110  ---s--x---   |  6110  ---s--s--- 
+111  ---x--x--x   |  2111  ---x--s--x   |  4111  ---s--x--x   |  6111  ---s--s--x 
+112  ---x--x-w-   |  2112  ---x--s-w-   |  4112  ---s--x-w-   |  6112  ---s--s-w- 
+113  ---x--x-wx   |  2113  ---x--s-wx   |  4113  ---s--x-wx   |  6113  ---s--s-wx 
+114  ---x--xr--   |  2114  ---x--sr--   |  4114  ---s--xr--   |  6114  ---s--sr-- 
+115  ---x--xr-x   |  2115  ---x--sr-x   |  4115  ---s--xr-x   |  6115  ---s--sr-x 
+116  ---x--xrw-   |  2116  ---x--srw-   |  4116  ---s--xrw-   |  6116  ---s--srw- 
+117  ---x--xrwx   |  2117  ---x--srwx   |  4117  ---s--xrwx   |  6117  ---s--srwx 
+120  ---x-w----   |  2120  ---x-wS---   |  4120  ---s-w----   |  6120  ---s-wS--- 
+121  ---x-w---x   |  2121  ---x-wS--x   |  4121  ---s-w---x   |  6121  ---s-wS--x 
+122  ---x-w--w-   |  2122  ---x-wS-w-   |  4122  ---s-w--w-   |  6122  ---s-wS-w- 
+123  ---x-w--wx   |  2123  ---x-wS-wx   |  4123  ---s-w--wx   |  6123  ---s-wS-wx 
+124  ---x-w-r--   |  2124  ---x-wSr--   |  4124  ---s-w-r--   |  6124  ---s-wSr-- 
+125  ---x-w-r-x   |  2125  ---x-wSr-x   |  4125  ---s-w-r-x   |  6125  ---s-wSr-x 
+126  ---x-w-rw-   |  2126  ---x-wSrw-   |  4126  ---s-w-rw-   |  6126  ---s-wSrw- 
+127  ---x-w-rwx   |  2127  ---x-wSrwx   |  4127  ---s-w-rwx   |  6127  ---s-wSrwx 
+130  ---x-wx---   |  2130  ---x-ws---   |  4130  ---s-wx---   |  6130  ---s-ws--- 
+131  ---x-wx--x   |  2131  ---x-ws--x   |  4131  ---s-wx--x   |  6131  ---s-ws--x 
+132  ---x-wx-w-   |  2132  ---x-ws-w-   |  4132  ---s-wx-w-   |  6132  ---s-ws-w- 
+133  ---x-wx-wx   |  2133  ---x-ws-wx   |  4133  ---s-wx-wx   |  6133  ---s-ws-wx 
+134  ---x-wxr--   |  2134  ---x-wsr--   |  4134  ---s-wxr--   |  6134  ---s-wsr-- 
+135  ---x-wxr-x   |  2135  ---x-wsr-x   |  4135  ---s-wxr-x   |  6135  ---s-wsr-x 
+136  ---x-wxrw-   |  2136  ---x-wsrw-   |  4136  ---s-wxrw-   |  6136  ---s-wsrw- 
+137  ---x-wxrwx   |  2137  ---x-wsrwx   |  4137  ---s-wxrwx   |  6137  ---s-wsrwx 
+140  ---xr-----   |  2140  ---xr-S---   |  4140  ---sr-----   |  6140  ---sr-S--- 
+141  ---xr----x   |  2141  ---xr-S--x   |  4141  ---sr----x   |  6141  ---sr-S--x 
+142  ---xr---w-   |  2142  ---xr-S-w-   |  4142  ---sr---w-   |  6142  ---sr-S-w- 
+143  ---xr---wx   |  2143  ---xr-S-wx   |  4143  ---sr---wx   |  6143  ---sr-S-wx 
+144  ---xr--r--   |  2144  ---xr-Sr--   |  4144  ---sr--r--   |  6144  ---sr-Sr-- 
+145  ---xr--r-x   |  2145  ---xr-Sr-x   |  4145  ---sr--r-x   |  6145  ---sr-Sr-x 
+146  ---xr--rw-   |  2146  ---xr-Srw-   |  4146  ---sr--rw-   |  6146  ---sr-Srw- 
+147  ---xr--rwx   |  2147  ---xr-Srwx   |  4147  ---sr--rwx   |  6147  ---sr-Srwx 
+150  ---xr-x---   |  2150  ---xr-s---   |  4150  ---sr-x---   |  6150  ---sr-s--- 
+151  ---xr-x--x   |  2151  ---xr-s--x   |  4151  ---sr-x--x   |  6151  ---sr-s--x 
+152  ---xr-x-w-   |  2152  ---xr-s-w-   |  4152  ---sr-x-w-   |  6152  ---sr-s-w- 
+153  ---xr-x-wx   |  2153  ---xr-s-wx   |  4153  ---sr-x-wx   |  6153  ---sr-s-wx 
+154  ---xr-xr--   |  2154  ---xr-sr--   |  4154  ---sr-xr--   |  6154  ---sr-sr-- 
+155  ---xr-xr-x   |  2155  ---xr-sr-x   |  4155  ---sr-xr-x   |  6155  ---sr-sr-x 
+156  ---xr-xrw-   |  2156  ---xr-srw-   |  4156  ---sr-xrw-   |  6156  ---sr-srw- 
+157  ---xr-xrwx   |  2157  ---xr-srwx   |  4157  ---sr-xrwx   |  6157  ---sr-srwx 
+160  ---xrw----   |  2160  ---xrwS---   |  4160  ---srw----   |  6160  ---srwS--- 
+161  ---xrw---x   |  2161  ---xrwS--x   |  4161  ---srw---x   |  6161  ---srwS--x 
+162  ---xrw--w-   |  2162  ---xrwS-w-   |  4162  ---srw--w-   |  6162  ---srwS-w- 
+163  ---xrw--wx   |  2163  ---xrwS-wx   |  4163  ---srw--wx   |  6163  ---srwS-wx 
+164  ---xrw-r--   |  2164  ---xrwSr--   |  4164  ---srw-r--   |  6164  ---srwSr-- 
+165  ---xrw-r-x   |  2165  ---xrwSr-x   |  4165  ---srw-r-x   |  6165  ---srwSr-x 
+166  ---xrw-rw-   |  2166  ---xrwSrw-   |  4166  ---srw-rw-   |  6166  ---srwSrw- 
+167  ---xrw-rwx   |  2167  ---xrwSrwx   |  4167  ---srw-rwx   |  6167  ---srwSrwx 
+170  ---xrwx---   |  2170  ---xrws---   |  4170  ---srwx---   |  6170  ---srws--- 
+171  ---xrwx--x   |  2171  ---xrws--x   |  4171  ---srwx--x   |  6171  ---srws--x 
+172  ---xrwx-w-   |  2172  ---xrws-w-   |  4172  ---srwx-w-   |  6172  ---srws-w- 
+173  ---xrwx-wx   |  2173  ---xrws-wx   |  4173  ---srwx-wx   |  6173  ---srws-wx 
+174  ---xrwxr--   |  2174  ---xrwsr--   |  4174  ---srwxr--   |  6174  ---srwsr-- 
+175  ---xrwxr-x   |  2175  ---xrwsr-x   |  4175  ---srwxr-x   |  6175  ---srwsr-x 
+176  ---xrwxrw-   |  2176  ---xrwsrw-   |  4176  ---srwxrw-   |  6176  ---srwsrw- 
+177  ---xrwxrwx   |  2177  ---xrwsrwx   |  4177  ---srwxrwx   |  6177  ---srwsrwx 
+200  --w-------   |  2200  --w---S---   |  4200  --wS------   |  6200  --wS--S--- 
+201  --w------x   |  2201  --w---S--x   |  4201  --wS-----x   |  6201  --wS--S--x 
+202  --w-----w-   |  2202  --w---S-w-   |  4202  --wS----w-   |  6202  --wS--S-w- 
+203  --w-----wx   |  2203  --w---S-wx   |  4203  --wS----wx   |  6203  --wS--S-wx 
+204  --w----r--   |  2204  --w---Sr--   |  4204  --wS---r--   |  6204  --wS--Sr-- 
+205  --w----r-x   |  2205  --w---Sr-x   |  4205  --wS---r-x   |  6205  --wS--Sr-x 
+206  --w----rw-   |  2206  --w---Srw-   |  4206  --wS---rw-   |  6206  --wS--Srw- 
+207  --w----rwx   |  2207  --w---Srwx   |  4207  --wS---rwx   |  6207  --wS--Srwx 
+210  --w---x---   |  2210  --w---s---   |  4210  --wS--x---   |  6210  --wS--s--- 
+211  --w---x--x   |  2211  --w---s--x   |  4211  --wS--x--x   |  6211  --wS--s--x 
+212  --w---x-w-   |  2212  --w---s-w-   |  4212  --wS--x-w-   |  6212  --wS--s-w- 
+213  --w---x-wx   |  2213  --w---s-wx   |  4213  --wS--x-wx   |  6213  --wS--s-wx 
+214  --w---xr--   |  2214  --w---sr--   |  4214  --wS--xr--   |  6214  --wS--sr-- 
+215  --w---xr-x   |  2215  --w---sr-x   |  4215  --wS--xr-x   |  6215  --wS--sr-x 
+216  --w---xrw-   |  2216  --w---srw-   |  4216  --wS--xrw-   |  6216  --wS--srw- 
+217  --w---xrwx   |  2217  --w---srwx   |  4217  --wS--xrwx   |  6217  --wS--srwx 
+220  --w--w----   |  2220  --w--wS---   |  4220  --wS-w----   |  6220  --wS-wS--- 
+221  --w--w---x   |  2221  --w--wS--x   |  4221  --wS-w---x   |  6221  --wS-wS--x 
+222  --w--w--w-   |  2222  --w--wS-w-   |  4222  --wS-w--w-   |  6222  --wS-wS-w- 
+223  --w--w--wx   |  2223  --w--wS-wx   |  4223  --wS-w--wx   |  6223  --wS-wS-wx 
+224  --w--w-r--   |  2224  --w--wSr--   |  4224  --wS-w-r--   |  6224  --wS-wSr-- 
+225  --w--w-r-x   |  2225  --w--wSr-x   |  4225  --wS-w-r-x   |  6225  --wS-wSr-x 
+226  --w--w-rw-   |  2226  --w--wSrw-   |  4226  --wS-w-rw-   |  6226  --wS-wSrw- 
+227  --w--w-rwx   |  2227  --w--wSrwx   |  4227  --wS-w-rwx   |  6227  --wS-wSrwx 
+230  --w--wx---   |  2230  --w--ws---   |  4230  --wS-wx---   |  6230  --wS-ws--- 
+231  --w--wx--x   |  2231  --w--ws--x   |  4231  --wS-wx--x   |  6231  --wS-ws--x 
+232  --w--wx-w-   |  2232  --w--ws-w-   |  4232  --wS-wx-w-   |  6232  --wS-ws-w- 
+233  --w--wx-wx   |  2233  --w--ws-wx   |  4233  --wS-wx-wx   |  6233  --wS-ws-wx 
+234  --w--wxr--   |  2234  --w--wsr--   |  4234  --wS-wxr--   |  6234  --wS-wsr-- 
+235  --w--wxr-x   |  2235  --w--wsr-x   |  4235  --wS-wxr-x   |  6235  --wS-wsr-x 
+236  --w--wxrw-   |  2236  --w--wsrw-   |  4236  --wS-wxrw-   |  6236  --wS-wsrw- 
+237  --w--wxrwx   |  2237  --w--wsrwx   |  4237  --wS-wxrwx   |  6237  --wS-wsrwx 
+240  --w-r-----   |  2240  --w-r-S---   |  4240  --wSr-----   |  6240  --wSr-S--- 
+241  --w-r----x   |  2241  --w-r-S--x   |  4241  --wSr----x   |  6241  --wSr-S--x 
+242  --w-r---w-   |  2242  --w-r-S-w-   |  4242  --wSr---w-   |  6242  --wSr-S-w- 
+243  --w-r---wx   |  2243  --w-r-S-wx   |  4243  --wSr---wx   |  6243  --wSr-S-wx 
+244  --w-r--r--   |  2244  --w-r-Sr--   |  4244  --wSr--r--   |  6244  --wSr-Sr-- 
+245  --w-r--r-x   |  2245  --w-r-Sr-x   |  4245  --wSr--r-x   |  6245  --wSr-Sr-x 
+246  --w-r--rw-   |  2246  --w-r-Srw-   |  4246  --wSr--rw-   |  6246  --wSr-Srw- 
+247  --w-r--rwx   |  2247  --w-r-Srwx   |  4247  --wSr--rwx   |  6247  --wSr-Srwx 
+250  --w-r-x---   |  2250  --w-r-s---   |  4250  --wSr-x---   |  6250  --wSr-s--- 
+251  --w-r-x--x   |  2251  --w-r-s--x   |  4251  --wSr-x--x   |  6251  --wSr-s--x 
+252  --w-r-x-w-   |  2252  --w-r-s-w-   |  4252  --wSr-x-w-   |  6252  --wSr-s-w- 
+253  --w-r-x-wx   |  2253  --w-r-s-wx   |  4253  --wSr-x-wx   |  6253  --wSr-s-wx 
+254  --w-r-xr--   |  2254  --w-r-sr--   |  4254  --wSr-xr--   |  6254  --wSr-sr-- 
+255  --w-r-xr-x   |  2255  --w-r-sr-x   |  4255  --wSr-xr-x   |  6255  --wSr-sr-x 
+256  --w-r-xrw-   |  2256  --w-r-srw-   |  4256  --wSr-xrw-   |  6256  --wSr-srw- 
+257  --w-r-xrwx   |  2257  --w-r-srwx   |  4257  --wSr-xrwx   |  6257  --wSr-srwx 
+260  --w-rw----   |  2260  --w-rwS---   |  4260  --wSrw----   |  6260  --wSrwS--- 
+261  --w-rw---x   |  2261  --w-rwS--x   |  4261  --wSrw---x   |  6261  --wSrwS--x 
+262  --w-rw--w-   |  2262  --w-rwS-w-   |  4262  --wSrw--w-   |  6262  --wSrwS-w- 
+263  --w-rw--wx   |  2263  --w-rwS-wx   |  4263  --wSrw--wx   |  6263  --wSrwS-wx 
+264  --w-rw-r--   |  2264  --w-rwSr--   |  4264  --wSrw-r--   |  6264  --wSrwSr-- 
+265  --w-rw-r-x   |  2265  --w-rwSr-x   |  4265  --wSrw-r-x   |  6265  --wSrwSr-x 
+266  --w-rw-rw-   |  2266  --w-rwSrw-   |  4266  --wSrw-rw-   |  6266  --wSrwSrw- 
+267  --w-rw-rwx   |  2267  --w-rwSrwx   |  4267  --wSrw-rwx   |  6267  --wSrwSrwx 
+270  --w-rwx---   |  2270  --w-rws---   |  4270  --wSrwx---   |  6270  --wSrws--- 
+271  --w-rwx--x   |  2271  --w-rws--x   |  4271  --wSrwx--x   |  6271  --wSrws--x 
+272  --w-rwx-w-   |  2272  --w-rws-w-   |  4272  --wSrwx-w-   |  6272  --wSrws-w- 
+273  --w-rwx-wx   |  2273  --w-rws-wx   |  4273  --wSrwx-wx   |  6273  --wSrws-wx 
+274  --w-rwxr--   |  2274  --w-rwsr--   |  4274  --wSrwxr--   |  6274  --wSrwsr-- 
+275  --w-rwxr-x   |  2275  --w-rwsr-x   |  4275  --wSrwxr-x   |  6275  --wSrwsr-x 
+276  --w-rwxrw-   |  2276  --w-rwsrw-   |  4276  --wSrwxrw-   |  6276  --wSrwsrw- 
+277  --w-rwxrwx   |  2277  --w-rwsrwx   |  4277  --wSrwxrwx   |  6277  --wSrwsrwx 
+300  --wx------   |  2300  --wx--S---   |  4300  --ws------   |  6300  --ws--S--- 
+301  --wx-----x   |  2301  --wx--S--x   |  4301  --ws-----x   |  6301  --ws--S--x 
+302  --wx----w-   |  2302  --wx--S-w-   |  4302  --ws----w-   |  6302  --ws--S-w- 
+303  --wx----wx   |  2303  --wx--S-wx   |  4303  --ws----wx   |  6303  --ws--S-wx 
+304  --wx---r--   |  2304  --wx--Sr--   |  4304  --ws---r--   |  6304  --ws--Sr-- 
+305  --wx---r-x   |  2305  --wx--Sr-x   |  4305  --ws---r-x   |  6305  --ws--Sr-x 
+306  --wx---rw-   |  2306  --wx--Srw-   |  4306  --ws---rw-   |  6306  --ws--Srw- 
+307  --wx---rwx   |  2307  --wx--Srwx   |  4307  --ws---rwx   |  6307  --ws--Srwx 
+310  --wx--x---   |  2310  --wx--s---   |  4310  --ws--x---   |  6310  --ws--s--- 
+311  --wx--x--x   |  2311  --wx--s--x   |  4311  --ws--x--x   |  6311  --ws--s--x 
+312  --wx--x-w-   |  2312  --wx--s-w-   |  4312  --ws--x-w-   |  6312  --ws--s-w- 
+313  --wx--x-wx   |  2313  --wx--s-wx   |  4313  --ws--x-wx   |  6313  --ws--s-wx 
+314  --wx--xr--   |  2314  --wx--sr--   |  4314  --ws--xr--   |  6314  --ws--sr-- 
+315  --wx--xr-x   |  2315  --wx--sr-x   |  4315  --ws--xr-x   |  6315  --ws--sr-x 
+316  --wx--xrw-   |  2316  --wx--srw-   |  4316  --ws--xrw-   |  6316  --ws--srw- 
+317  --wx--xrwx   |  2317  --wx--srwx   |  4317  --ws--xrwx   |  6317  --ws--srwx 
+320  --wx-w----   |  2320  --wx-wS---   |  4320  --ws-w----   |  6320  --ws-wS--- 
+321  --wx-w---x   |  2321  --wx-wS--x   |  4321  --ws-w---x   |  6321  --ws-wS--x 
+322  --wx-w--w-   |  2322  --wx-wS-w-   |  4322  --ws-w--w-   |  6322  --ws-wS-w- 
+323  --wx-w--wx   |  2323  --wx-wS-wx   |  4323  --ws-w--wx   |  6323  --ws-wS-wx 
+324  --wx-w-r--   |  2324  --wx-wSr--   |  4324  --ws-w-r--   |  6324  --ws-wSr-- 
+325  --wx-w-r-x   |  2325  --wx-wSr-x   |  4325  --ws-w-r-x   |  6325  --ws-wSr-x 
+326  --wx-w-rw-   |  2326  --wx-wSrw-   |  4326  --ws-w-rw-   |  6326  --ws-wSrw- 
+327  --wx-w-rwx   |  2327  --wx-wSrwx   |  4327  --ws-w-rwx   |  6327  --ws-wSrwx 
+330  --wx-wx---   |  2330  --wx-ws---   |  4330  --ws-wx---   |  6330  --ws-ws--- 
+331  --wx-wx--x   |  2331  --wx-ws--x   |  4331  --ws-wx--x   |  6331  --ws-ws--x 
+332  --wx-wx-w-   |  2332  --wx-ws-w-   |  4332  --ws-wx-w-   |  6332  --ws-ws-w- 
+333  --wx-wx-wx   |  2333  --wx-ws-wx   |  4333  --ws-wx-wx   |  6333  --ws-ws-wx 
+334  --wx-wxr--   |  2334  --wx-wsr--   |  4334  --ws-wxr--   |  6334  --ws-wsr-- 
+335  --wx-wxr-x   |  2335  --wx-wsr-x   |  4335  --ws-wxr-x   |  6335  --ws-wsr-x 
+336  --wx-wxrw-   |  2336  --wx-wsrw-   |  4336  --ws-wxrw-   |  6336  --ws-wsrw- 
+337  --wx-wxrwx   |  2337  --wx-wsrwx   |  4337  --ws-wxrwx   |  6337  --ws-wsrwx 
+340  --wxr-----   |  2340  --wxr-S---   |  4340  --wsr-----   |  6340  --wsr-S--- 
+341  --wxr----x   |  2341  --wxr-S--x   |  4341  --wsr----x   |  6341  --wsr-S--x 
+342  --wxr---w-   |  2342  --wxr-S-w-   |  4342  --wsr---w-   |  6342  --wsr-S-w- 
+343  --wxr---wx   |  2343  --wxr-S-wx   |  4343  --wsr---wx   |  6343  --wsr-S-wx 
+344  --wxr--r--   |  2344  --wxr-Sr--   |  4344  --wsr--r--   |  6344  --wsr-Sr-- 
+345  --wxr--r-x   |  2345  --wxr-Sr-x   |  4345  --wsr--r-x   |  6345  --wsr-Sr-x 
+346  --wxr--rw-   |  2346  --wxr-Srw-   |  4346  --wsr--rw-   |  6346  --wsr-Srw- 
+347  --wxr--rwx   |  2347  --wxr-Srwx   |  4347  --wsr--rwx   |  6347  --wsr-Srwx 
+350  --wxr-x---   |  2350  --wxr-s---   |  4350  --wsr-x---   |  6350  --wsr-s--- 
+351  --wxr-x--x   |  2351  --wxr-s--x   |  4351  --wsr-x--x   |  6351  --wsr-s--x 
+352  --wxr-x-w-   |  2352  --wxr-s-w-   |  4352  --wsr-x-w-   |  6352  --wsr-s-w- 
+353  --wxr-x-wx   |  2353  --wxr-s-wx   |  4353  --wsr-x-wx   |  6353  --wsr-s-wx 
+354  --wxr-xr--   |  2354  --wxr-sr--   |  4354  --wsr-xr--   |  6354  --wsr-sr-- 
+355  --wxr-xr-x   |  2355  --wxr-sr-x   |  4355  --wsr-xr-x   |  6355  --wsr-sr-x 
+356  --wxr-xrw-   |  2356  --wxr-srw-   |  4356  --wsr-xrw-   |  6356  --wsr-srw- 
+357  --wxr-xrwx   |  2357  --wxr-srwx   |  4357  --wsr-xrwx   |  6357  --wsr-srwx 
+360  --wxrw----   |  2360  --wxrwS---   |  4360  --wsrw----   |  6360  --wsrwS--- 
+361  --wxrw---x   |  2361  --wxrwS--x   |  4361  --wsrw---x   |  6361  --wsrwS--x 
+362  --wxrw--w-   |  2362  --wxrwS-w-   |  4362  --wsrw--w-   |  6362  --wsrwS-w- 
+363  --wxrw--wx   |  2363  --wxrwS-wx   |  4363  --wsrw--wx   |  6363  --wsrwS-wx 
+364  --wxrw-r--   |  2364  --wxrwSr--   |  4364  --wsrw-r--   |  6364  --wsrwSr-- 
+365  --wxrw-r-x   |  2365  --wxrwSr-x   |  4365  --wsrw-r-x   |  6365  --wsrwSr-x 
+366  --wxrw-rw-   |  2366  --wxrwSrw-   |  4366  --wsrw-rw-   |  6366  --wsrwSrw- 
+367  --wxrw-rwx   |  2367  --wxrwSrwx   |  4367  --wsrw-rwx   |  6367  --wsrwSrwx 
+370  --wxrwx---   |  2370  --wxrws---   |  4370  --wsrwx---   |  6370  --wsrws--- 
+371  --wxrwx--x   |  2371  --wxrws--x   |  4371  --wsrwx--x   |  6371  --wsrws--x 
+372  --wxrwx-w-   |  2372  --wxrws-w-   |  4372  --wsrwx-w-   |  6372  --wsrws-w- 
+373  --wxrwx-wx   |  2373  --wxrws-wx   |  4373  --wsrwx-wx   |  6373  --wsrws-wx 
+374  --wxrwxr--   |  2374  --wxrwsr--   |  4374  --wsrwxr--   |  6374  --wsrwsr-- 
+375  --wxrwxr-x   |  2375  --wxrwsr-x   |  4375  --wsrwxr-x   |  6375  --wsrwsr-x 
+376  --wxrwxrw-   |  2376  --wxrwsrw-   |  4376  --wsrwxrw-   |  6376  --wsrwsrw- 
+377  --wxrwxrwx   |  2377  --wxrwsrwx   |  4377  --wsrwxrwx   |  6377  --wsrwsrwx 
+400  -r--------   |  2400  -r----S---   |  4400  -r-S------   |  6400  -r-S--S--- 
+401  -r-------x   |  2401  -r----S--x   |  4401  -r-S-----x   |  6401  -r-S--S--x 
+402  -r------w-   |  2402  -r----S-w-   |  4402  -r-S----w-   |  6402  -r-S--S-w- 
+403  -r------wx   |  2403  -r----S-wx   |  4403  -r-S----wx   |  6403  -r-S--S-wx 
+404  -r-----r--   |  2404  -r----Sr--   |  4404  -r-S---r--   |  6404  -r-S--Sr-- 
+405  -r-----r-x   |  2405  -r----Sr-x   |  4405  -r-S---r-x   |  6405  -r-S--Sr-x 
+406  -r-----rw-   |  2406  -r----Srw-   |  4406  -r-S---rw-   |  6406  -r-S--Srw- 
+407  -r-----rwx   |  2407  -r----Srwx   |  4407  -r-S---rwx   |  6407  -r-S--Srwx 
+410  -r----x---   |  2410  -r----s---   |  4410  -r-S--x---   |  6410  -r-S--s--- 
+411  -r----x--x   |  2411  -r----s--x   |  4411  -r-S--x--x   |  6411  -r-S--s--x 
+412  -r----x-w-   |  2412  -r----s-w-   |  4412  -r-S--x-w-   |  6412  -r-S--s-w- 
+413  -r----x-wx   |  2413  -r----s-wx   |  4413  -r-S--x-wx   |  6413  -r-S--s-wx 
+414  -r----xr--   |  2414  -r----sr--   |  4414  -r-S--xr--   |  6414  -r-S--sr-- 
+415  -r----xr-x   |  2415  -r----sr-x   |  4415  -r-S--xr-x   |  6415  -r-S--sr-x 
+416  -r----xrw-   |  2416  -r----srw-   |  4416  -r-S--xrw-   |  6416  -r-S--srw- 
+417  -r----xrwx   |  2417  -r----srwx   |  4417  -r-S--xrwx   |  6417  -r-S--srwx 
+420  -r---w----   |  2420  -r---wS---   |  4420  -r-S-w----   |  6420  -r-S-wS--- 
+421  -r---w---x   |  2421  -r---wS--x   |  4421  -r-S-w---x   |  6421  -r-S-wS--x 
+422  -r---w--w-   |  2422  -r---wS-w-   |  4422  -r-S-w--w-   |  6422  -r-S-wS-w- 
+423  -r---w--wx   |  2423  -r---wS-wx   |  4423  -r-S-w--wx   |  6423  -r-S-wS-wx 
+424  -r---w-r--   |  2424  -r---wSr--   |  4424  -r-S-w-r--   |  6424  -r-S-wSr-- 
+425  -r---w-r-x   |  2425  -r---wSr-x   |  4425  -r-S-w-r-x   |  6425  -r-S-wSr-x 
+426  -r---w-rw-   |  2426  -r---wSrw-   |  4426  -r-S-w-rw-   |  6426  -r-S-wSrw- 
+427  -r---w-rwx   |  2427  -r---wSrwx   |  4427  -r-S-w-rwx   |  6427  -r-S-wSrwx 
+430  -r---wx---   |  2430  -r---ws---   |  4430  -r-S-wx---   |  6430  -r-S-ws--- 
+431  -r---wx--x   |  2431  -r---ws--x   |  4431  -r-S-wx--x   |  6431  -r-S-ws--x 
+432  -r---wx-w-   |  2432  -r---ws-w-   |  4432  -r-S-wx-w-   |  6432  -r-S-ws-w- 
+433  -r---wx-wx   |  2433  -r---ws-wx   |  4433  -r-S-wx-wx   |  6433  -r-S-ws-wx 
+434  -r---wxr--   |  2434  -r---wsr--   |  4434  -r-S-wxr--   |  6434  -r-S-wsr-- 
+435  -r---wxr-x   |  2435  -r---wsr-x   |  4435  -r-S-wxr-x   |  6435  -r-S-wsr-x 
+436  -r---wxrw-   |  2436  -r---wsrw-   |  4436  -r-S-wxrw-   |  6436  -r-S-wsrw- 
+437  -r---wxrwx   |  2437  -r---wsrwx   |  4437  -r-S-wxrwx   |  6437  -r-S-wsrwx 
+440  -r--r-----   |  2440  -r--r-S---   |  4440  -r-Sr-----   |  6440  -r-Sr-S--- 
+441  -r--r----x   |  2441  -r--r-S--x   |  4441  -r-Sr----x   |  6441  -r-Sr-S--x 
+442  -r--r---w-   |  2442  -r--r-S-w-   |  4442  -r-Sr---w-   |  6442  -r-Sr-S-w- 
+443  -r--r---wx   |  2443  -r--r-S-wx   |  4443  -r-Sr---wx   |  6443  -r-Sr-S-wx 
+444  -r--r--r--   |  2444  -r--r-Sr--   |  4444  -r-Sr--r--   |  6444  -r-Sr-Sr-- 
+445  -r--r--r-x   |  2445  -r--r-Sr-x   |  4445  -r-Sr--r-x   |  6445  -r-Sr-Sr-x 
+446  -r--r--rw-   |  2446  -r--r-Srw-   |  4446  -r-Sr--rw-   |  6446  -r-Sr-Srw- 
+447  -r--r--rwx   |  2447  -r--r-Srwx   |  4447  -r-Sr--rwx   |  6447  -r-Sr-Srwx 
+450  -r--r-x---   |  2450  -r--r-s---   |  4450  -r-Sr-x---   |  6450  -r-Sr-s--- 
+451  -r--r-x--x   |  2451  -r--r-s--x   |  4451  -r-Sr-x--x   |  6451  -r-Sr-s--x 
+452  -r--r-x-w-   |  2452  -r--r-s-w-   |  4452  -r-Sr-x-w-   |  6452  -r-Sr-s-w- 
+453  -r--r-x-wx   |  2453  -r--r-s-wx   |  4453  -r-Sr-x-wx   |  6453  -r-Sr-s-wx 
+454  -r--r-xr--   |  2454  -r--r-sr--   |  4454  -r-Sr-xr--   |  6454  -r-Sr-sr-- 
+455  -r--r-xr-x   |  2455  -r--r-sr-x   |  4455  -r-Sr-xr-x   |  6455  -r-Sr-sr-x 
+456  -r--r-xrw-   |  2456  -r--r-srw-   |  4456  -r-Sr-xrw-   |  6456  -r-Sr-srw- 
+457  -r--r-xrwx   |  2457  -r--r-srwx   |  4457  -r-Sr-xrwx   |  6457  -r-Sr-srwx 
+460  -r--rw----   |  2460  -r--rwS---   |  4460  -r-Srw----   |  6460  -r-SrwS--- 
+461  -r--rw---x   |  2461  -r--rwS--x   |  4461  -r-Srw---x   |  6461  -r-SrwS--x 
+462  -r--rw--w-   |  2462  -r--rwS-w-   |  4462  -r-Srw--w-   |  6462  -r-SrwS-w- 
+463  -r--rw--wx   |  2463  -r--rwS-wx   |  4463  -r-Srw--wx   |  6463  -r-SrwS-wx 
+464  -r--rw-r--   |  2464  -r--rwSr--   |  4464  -r-Srw-r--   |  6464  -r-SrwSr-- 
+465  -r--rw-r-x   |  2465  -r--rwSr-x   |  4465  -r-Srw-r-x   |  6465  -r-SrwSr-x 
+466  -r--rw-rw-   |  2466  -r--rwSrw-   |  4466  -r-Srw-rw-   |  6466  -r-SrwSrw- 
+467  -r--rw-rwx   |  2467  -r--rwSrwx   |  4467  -r-Srw-rwx   |  6467  -r-SrwSrwx 
+470  -r--rwx---   |  2470  -r--rws---   |  4470  -r-Srwx---   |  6470  -r-Srws--- 
+471  -r--rwx--x   |  2471  -r--rws--x   |  4471  -r-Srwx--x   |  6471  -r-Srws--x 
+472  -r--rwx-w-   |  2472  -r--rws-w-   |  4472  -r-Srwx-w-   |  6472  -r-Srws-w- 
+473  -r--rwx-wx   |  2473  -r--rws-wx   |  4473  -r-Srwx-wx   |  6473  -r-Srws-wx 
+474  -r--rwxr--   |  2474  -r--rwsr--   |  4474  -r-Srwxr--   |  6474  -r-Srwsr-- 
+475  -r--rwxr-x   |  2475  -r--rwsr-x   |  4475  -r-Srwxr-x   |  6475  -r-Srwsr-x 
+476  -r--rwxrw-   |  2476  -r--rwsrw-   |  4476  -r-Srwxrw-   |  6476  -r-Srwsrw- 
+477  -r--rwxrwx   |  2477  -r--rwsrwx   |  4477  -r-Srwxrwx   |  6477  -r-Srwsrwx 
+500  -r-x------   |  2500  -r-x--S---   |  4500  -r-s------   |  6500  -r-s--S--- 
+501  -r-x-----x   |  2501  -r-x--S--x   |  4501  -r-s-----x   |  6501  -r-s--S--x 
+502  -r-x----w-   |  2502  -r-x--S-w-   |  4502  -r-s----w-   |  6502  -r-s--S-w- 
+503  -r-x----wx   |  2503  -r-x--S-wx   |  4503  -r-s----wx   |  6503  -r-s--S-wx 
+504  -r-x---r--   |  2504  -r-x--Sr--   |  4504  -r-s---r--   |  6504  -r-s--Sr-- 
+505  -r-x---r-x   |  2505  -r-x--Sr-x   |  4505  -r-s---r-x   |  6505  -r-s--Sr-x 
+506  -r-x---rw-   |  2506  -r-x--Srw-   |  4506  -r-s---rw-   |  6506  -r-s--Srw- 
+507  -r-x---rwx   |  2507  -r-x--Srwx   |  4507  -r-s---rwx   |  6507  -r-s--Srwx 
+510  -r-x--x---   |  2510  -r-x--s---   |  4510  -r-s--x---   |  6510  -r-s--s--- 
+511  -r-x--x--x   |  2511  -r-x--s--x   |  4511  -r-s--x--x   |  6511  -r-s--s--x 
+512  -r-x--x-w-   |  2512  -r-x--s-w-   |  4512  -r-s--x-w-   |  6512  -r-s--s-w- 
+513  -r-x--x-wx   |  2513  -r-x--s-wx   |  4513  -r-s--x-wx   |  6513  -r-s--s-wx 
+514  -r-x--xr--   |  2514  -r-x--sr--   |  4514  -r-s--xr--   |  6514  -r-s--sr-- 
+515  -r-x--xr-x   |  2515  -r-x--sr-x   |  4515  -r-s--xr-x   |  6515  -r-s--sr-x 
+516  -r-x--xrw-   |  2516  -r-x--srw-   |  4516  -r-s--xrw-   |  6516  -r-s--srw- 
+517  -r-x--xrwx   |  2517  -r-x--srwx   |  4517  -r-s--xrwx   |  6517  -r-s--srwx 
+520  -r-x-w----   |  2520  -r-x-wS---   |  4520  -r-s-w----   |  6520  -r-s-wS--- 
+521  -r-x-w---x   |  2521  -r-x-wS--x   |  4521  -r-s-w---x   |  6521  -r-s-wS--x 
+522  -r-x-w--w-   |  2522  -r-x-wS-w-   |  4522  -r-s-w--w-   |  6522  -r-s-wS-w- 
+523  -r-x-w--wx   |  2523  -r-x-wS-wx   |  4523  -r-s-w--wx   |  6523  -r-s-wS-wx 
+524  -r-x-w-r--   |  2524  -r-x-wSr--   |  4524  -r-s-w-r--   |  6524  -r-s-wSr-- 
+525  -r-x-w-r-x   |  2525  -r-x-wSr-x   |  4525  -r-s-w-r-x   |  6525  -r-s-wSr-x 
+526  -r-x-w-rw-   |  2526  -r-x-wSrw-   |  4526  -r-s-w-rw-   |  6526  -r-s-wSrw- 
+527  -r-x-w-rwx   |  2527  -r-x-wSrwx   |  4527  -r-s-w-rwx   |  6527  -r-s-wSrwx 
+530  -r-x-wx---   |  2530  -r-x-ws---   |  4530  -r-s-wx---   |  6530  -r-s-ws--- 
+531  -r-x-wx--x   |  2531  -r-x-ws--x   |  4531  -r-s-wx--x   |  6531  -r-s-ws--x 
+532  -r-x-wx-w-   |  2532  -r-x-ws-w-   |  4532  -r-s-wx-w-   |  6532  -r-s-ws-w- 
+533  -r-x-wx-wx   |  2533  -r-x-ws-wx   |  4533  -r-s-wx-wx   |  6533  -r-s-ws-wx 
+534  -r-x-wxr--   |  2534  -r-x-wsr--   |  4534  -r-s-wxr--   |  6534  -r-s-wsr-- 
+535  -r-x-wxr-x   |  2535  -r-x-wsr-x   |  4535  -r-s-wxr-x   |  6535  -r-s-wsr-x 
+536  -r-x-wxrw-   |  2536  -r-x-wsrw-   |  4536  -r-s-wxrw-   |  6536  -r-s-wsrw- 
+537  -r-x-wxrwx   |  2537  -r-x-wsrwx   |  4537  -r-s-wxrwx   |  6537  -r-s-wsrwx 
+540  -r-xr-----   |  2540  -r-xr-S---   |  4540  -r-sr-----   |  6540  -r-sr-S--- 
+541  -r-xr----x   |  2541  -r-xr-S--x   |  4541  -r-sr----x   |  6541  -r-sr-S--x 
+542  -r-xr---w-   |  2542  -r-xr-S-w-   |  4542  -r-sr---w-   |  6542  -r-sr-S-w- 
+543  -r-xr---wx   |  2543  -r-xr-S-wx   |  4543  -r-sr---wx   |  6543  -r-sr-S-wx 
+544  -r-xr--r--   |  2544  -r-xr-Sr--   |  4544  -r-sr--r--   |  6544  -r-sr-Sr-- 
+545  -r-xr--r-x   |  2545  -r-xr-Sr-x   |  4545  -r-sr--r-x   |  6545  -r-sr-Sr-x 
+546  -r-xr--rw-   |  2546  -r-xr-Srw-   |  4546  -r-sr--rw-   |  6546  -r-sr-Srw- 
+547  -r-xr--rwx   |  2547  -r-xr-Srwx   |  4547  -r-sr--rwx   |  6547  -r-sr-Srwx 
+550  -r-xr-x---   |  2550  -r-xr-s---   |  4550  -r-sr-x---   |  6550  -r-sr-s--- 
+551  -r-xr-x--x   |  2551  -r-xr-s--x   |  4551  -r-sr-x--x   |  6551  -r-sr-s--x 
+552  -r-xr-x-w-   |  2552  -r-xr-s-w-   |  4552  -r-sr-x-w-   |  6552  -r-sr-s-w- 
+553  -r-xr-x-wx   |  2553  -r-xr-s-wx   |  4553  -r-sr-x-wx   |  6553  -r-sr-s-wx 
+554  -r-xr-xr--   |  2554  -r-xr-sr--   |  4554  -r-sr-xr--   |  6554  -r-sr-sr-- 
+555  -r-xr-xr-x   |  2555  -r-xr-sr-x   |  4555  -r-sr-xr-x   |  6555  -r-sr-sr-x 
+556  -r-xr-xrw-   |  2556  -r-xr-srw-   |  4556  -r-sr-xrw-   |  6556  -r-sr-srw- 
+557  -r-xr-xrwx   |  2557  -r-xr-srwx   |  4557  -r-sr-xrwx   |  6557  -r-sr-srwx 
+560  -r-xrw----   |  2560  -r-xrwS---   |  4560  -r-srw----   |  6560  -r-srwS--- 
+561  -r-xrw---x   |  2561  -r-xrwS--x   |  4561  -r-srw---x   |  6561  -r-srwS--x 
+562  -r-xrw--w-   |  2562  -r-xrwS-w-   |  4562  -r-srw--w-   |  6562  -r-srwS-w- 
+563  -r-xrw--wx   |  2563  -r-xrwS-wx   |  4563  -r-srw--wx   |  6563  -r-srwS-wx 
+564  -r-xrw-r--   |  2564  -r-xrwSr--   |  4564  -r-srw-r--   |  6564  -r-srwSr-- 
+565  -r-xrw-r-x   |  2565  -r-xrwSr-x   |  4565  -r-srw-r-x   |  6565  -r-srwSr-x 
+566  -r-xrw-rw-   |  2566  -r-xrwSrw-   |  4566  -r-srw-rw-   |  6566  -r-srwSrw- 
+567  -r-xrw-rwx   |  2567  -r-xrwSrwx   |  4567  -r-srw-rwx   |  6567  -r-srwSrwx 
+570  -r-xrwx---   |  2570  -r-xrws---   |  4570  -r-srwx---   |  6570  -r-srws--- 
+571  -r-xrwx--x   |  2571  -r-xrws--x   |  4571  -r-srwx--x   |  6571  -r-srws--x 
+572  -r-xrwx-w-   |  2572  -r-xrws-w-   |  4572  -r-srwx-w-   |  6572  -r-srws-w- 
+573  -r-xrwx-wx   |  2573  -r-xrws-wx   |  4573  -r-srwx-wx   |  6573  -r-srws-wx 
+574  -r-xrwxr--   |  2574  -r-xrwsr--   |  4574  -r-srwxr--   |  6574  -r-srwsr-- 
+575  -r-xrwxr-x   |  2575  -r-xrwsr-x   |  4575  -r-srwxr-x   |  6575  -r-srwsr-x 
+576  -r-xrwxrw-   |  2576  -r-xrwsrw-   |  4576  -r-srwxrw-   |  6576  -r-srwsrw- 
+577  -r-xrwxrwx   |  2577  -r-xrwsrwx   |  4577  -r-srwxrwx   |  6577  -r-srwsrwx 
+600  -rw-------   |  2600  -rw---S---   |  4600  -rwS------   |  6600  -rwS--S--- 
+601  -rw------x   |  2601  -rw---S--x   |  4601  -rwS-----x   |  6601  -rwS--S--x 
+602  -rw-----w-   |  2602  -rw---S-w-   |  4602  -rwS----w-   |  6602  -rwS--S-w- 
+603  -rw-----wx   |  2603  -rw---S-wx   |  4603  -rwS----wx   |  6603  -rwS--S-wx 
+604  -rw----r--   |  2604  -rw---Sr--   |  4604  -rwS---r--   |  6604  -rwS--Sr-- 
+605  -rw----r-x   |  2605  -rw---Sr-x   |  4605  -rwS---r-x   |  6605  -rwS--Sr-x 
+606  -rw----rw-   |  2606  -rw---Srw-   |  4606  -rwS---rw-   |  6606  -rwS--Srw- 
+607  -rw----rwx   |  2607  -rw---Srwx   |  4607  -rwS---rwx   |  6607  -rwS--Srwx 
+610  -rw---x---   |  2610  -rw---s---   |  4610  -rwS--x---   |  6610  -rwS--s--- 
+611  -rw---x--x   |  2611  -rw---s--x   |  4611  -rwS--x--x   |  6611  -rwS--s--x 
+612  -rw---x-w-   |  2612  -rw---s-w-   |  4612  -rwS--x-w-   |  6612  -rwS--s-w- 
+613  -rw---x-wx   |  2613  -rw---s-wx   |  4613  -rwS--x-wx   |  6613  -rwS--s-wx 
+614  -rw---xr--   |  2614  -rw---sr--   |  4614  -rwS--xr--   |  6614  -rwS--sr-- 
+615  -rw---xr-x   |  2615  -rw---sr-x   |  4615  -rwS--xr-x   |  6615  -rwS--sr-x 
+616  -rw---xrw-   |  2616  -rw---srw-   |  4616  -rwS--xrw-   |  6616  -rwS--srw- 
+617  -rw---xrwx   |  2617  -rw---srwx   |  4617  -rwS--xrwx   |  6617  -rwS--srwx 
+620  -rw--w----   |  2620  -rw--wS---   |  4620  -rwS-w----   |  6620  -rwS-wS--- 
+621  -rw--w---x   |  2621  -rw--wS--x   |  4621  -rwS-w---x   |  6621  -rwS-wS--x 
+622  -rw--w--w-   |  2622  -rw--wS-w-   |  4622  -rwS-w--w-   |  6622  -rwS-wS-w- 
+623  -rw--w--wx   |  2623  -rw--wS-wx   |  4623  -rwS-w--wx   |  6623  -rwS-wS-wx 
+624  -rw--w-r--   |  2624  -rw--wSr--   |  4624  -rwS-w-r--   |  6624  -rwS-wSr-- 
+625  -rw--w-r-x   |  2625  -rw--wSr-x   |  4625  -rwS-w-r-x   |  6625  -rwS-wSr-x 
+626  -rw--w-rw-   |  2626  -rw--wSrw-   |  4626  -rwS-w-rw-   |  6626  -rwS-wSrw- 
+627  -rw--w-rwx   |  2627  -rw--wSrwx   |  4627  -rwS-w-rwx   |  6627  -rwS-wSrwx 
+630  -rw--wx---   |  2630  -rw--ws---   |  4630  -rwS-wx---   |  6630  -rwS-ws--- 
+631  -rw--wx--x   |  2631  -rw--ws--x   |  4631  -rwS-wx--x   |  6631  -rwS-ws--x 
+632  -rw--wx-w-   |  2632  -rw--ws-w-   |  4632  -rwS-wx-w-   |  6632  -rwS-ws-w- 
+633  -rw--wx-wx   |  2633  -rw--ws-wx   |  4633  -rwS-wx-wx   |  6633  -rwS-ws-wx 
+634  -rw--wxr--   |  2634  -rw--wsr--   |  4634  -rwS-wxr--   |  6634  -rwS-wsr-- 
+635  -rw--wxr-x   |  2635  -rw--wsr-x   |  4635  -rwS-wxr-x   |  6635  -rwS-wsr-x 
+636  -rw--wxrw-   |  2636  -rw--wsrw-   |  4636  -rwS-wxrw-   |  6636  -rwS-wsrw- 
+637  -rw--wxrwx   |  2637  -rw--wsrwx   |  4637  -rwS-wxrwx   |  6637  -rwS-wsrwx 
+640  -rw-r-----   |  2640  -rw-r-S---   |  4640  -rwSr-----   |  6640  -rwSr-S--- 
+641  -rw-r----x   |  2641  -rw-r-S--x   |  4641  -rwSr----x   |  6641  -rwSr-S--x 
+642  -rw-r---w-   |  2642  -rw-r-S-w-   |  4642  -rwSr---w-   |  6642  -rwSr-S-w- 
+643  -rw-r---wx   |  2643  -rw-r-S-wx   |  4643  -rwSr---wx   |  6643  -rwSr-S-wx 
+644  -rw-r--r--   |  2644  -rw-r-Sr--   |  4644  -rwSr--r--   |  6644  -rwSr-Sr-- 
+645  -rw-r--r-x   |  2645  -rw-r-Sr-x   |  4645  -rwSr--r-x   |  6645  -rwSr-Sr-x 
+646  -rw-r--rw-   |  2646  -rw-r-Srw-   |  4646  -rwSr--rw-   |  6646  -rwSr-Srw- 
+647  -rw-r--rwx   |  2647  -rw-r-Srwx   |  4647  -rwSr--rwx   |  6647  -rwSr-Srwx 
+650  -rw-r-x---   |  2650  -rw-r-s---   |  4650  -rwSr-x---   |  6650  -rwSr-s--- 
+651  -rw-r-x--x   |  2651  -rw-r-s--x   |  4651  -rwSr-x--x   |  6651  -rwSr-s--x 
+652  -rw-r-x-w-   |  2652  -rw-r-s-w-   |  4652  -rwSr-x-w-   |  6652  -rwSr-s-w- 
+653  -rw-r-x-wx   |  2653  -rw-r-s-wx   |  4653  -rwSr-x-wx   |  6653  -rwSr-s-wx 
+654  -rw-r-xr--   |  2654  -rw-r-sr--   |  4654  -rwSr-xr--   |  6654  -rwSr-sr-- 
+655  -rw-r-xr-x   |  2655  -rw-r-sr-x   |  4655  -rwSr-xr-x   |  6655  -rwSr-sr-x 
+656  -rw-r-xrw-   |  2656  -rw-r-srw-   |  4656  -rwSr-xrw-   |  6656  -rwSr-srw- 
+657  -rw-r-xrwx   |  2657  -rw-r-srwx   |  4657  -rwSr-xrwx   |  6657  -rwSr-srwx 
+660  -rw-rw----   |  2660  -rw-rwS---   |  4660  -rwSrw----   |  6660  -rwSrwS--- 
+661  -rw-rw---x   |  2661  -rw-rwS--x   |  4661  -rwSrw---x   |  6661  -rwSrwS--x 
+662  -rw-rw--w-   |  2662  -rw-rwS-w-   |  4662  -rwSrw--w-   |  6662  -rwSrwS-w- 
+663  -rw-rw--wx   |  2663  -rw-rwS-wx   |  4663  -rwSrw--wx   |  6663  -rwSrwS-wx 
+664  -rw-rw-r--   |  2664  -rw-rwSr--   |  4664  -rwSrw-r--   |  6664  -rwSrwSr-- 
+665  -rw-rw-r-x   |  2665  -rw-rwSr-x   |  4665  -rwSrw-r-x   |  6665  -rwSrwSr-x 
+666  -rw-rw-rw-   |  2666  -rw-rwSrw-   |  4666  -rwSrw-rw-   |  6666  -rwSrwSrw- 
+667  -rw-rw-rwx   |  2667  -rw-rwSrwx   |  4667  -rwSrw-rwx   |  6667  -rwSrwSrwx 
+670  -rw-rwx---   |  2670  -rw-rws---   |  4670  -rwSrwx---   |  6670  -rwSrws--- 
+671  -rw-rwx--x   |  2671  -rw-rws--x   |  4671  -rwSrwx--x   |  6671  -rwSrws--x 
+672  -rw-rwx-w-   |  2672  -rw-rws-w-   |  4672  -rwSrwx-w-   |  6672  -rwSrws-w- 
+673  -rw-rwx-wx   |  2673  -rw-rws-wx   |  4673  -rwSrwx-wx   |  6673  -rwSrws-wx 
+674  -rw-rwxr--   |  2674  -rw-rwsr--   |  4674  -rwSrwxr--   |  6674  -rwSrwsr-- 
+675  -rw-rwxr-x   |  2675  -rw-rwsr-x   |  4675  -rwSrwxr-x   |  6675  -rwSrwsr-x 
+676  -rw-rwxrw-   |  2676  -rw-rwsrw-   |  4676  -rwSrwxrw-   |  6676  -rwSrwsrw- 
+677  -rw-rwxrwx   |  2677  -rw-rwsrwx   |  4677  -rwSrwxrwx   |  6677  -rwSrwsrwx 
+700  -rwx------   |  2700  -rwx--S---   |  4700  -rws------   |  6700  -rws--S--- 
+701  -rwx-----x   |  2701  -rwx--S--x   |  4701  -rws-----x   |  6701  -rws--S--x 
+702  -rwx----w-   |  2702  -rwx--S-w-   |  4702  -rws----w-   |  6702  -rws--S-w- 
+703  -rwx----wx   |  2703  -rwx--S-wx   |  4703  -rws----wx   |  6703  -rws--S-wx 
+704  -rwx---r--   |  2704  -rwx--Sr--   |  4704  -rws---r--   |  6704  -rws--Sr-- 
+705  -rwx---r-x   |  2705  -rwx--Sr-x   |  4705  -rws---r-x   |  6705  -rws--Sr-x 
+706  -rwx---rw-   |  2706  -rwx--Srw-   |  4706  -rws---rw-   |  6706  -rws--Srw- 
+707  -rwx---rwx   |  2707  -rwx--Srwx   |  4707  -rws---rwx   |  6707  -rws--Srwx 
+710  -rwx--x---   |  2710  -rwx--s---   |  4710  -rws--x---   |  6710  -rws--s--- 
+711  -rwx--x--x   |  2711  -rwx--s--x   |  4711  -rws--x--x   |  6711  -rws--s--x 
+712  -rwx--x-w-   |  2712  -rwx--s-w-   |  4712  -rws--x-w-   |  6712  -rws--s-w- 
+713  -rwx--x-wx   |  2713  -rwx--s-wx   |  4713  -rws--x-wx   |  6713  -rws--s-wx 
+714  -rwx--xr--   |  2714  -rwx--sr--   |  4714  -rws--xr--   |  6714  -rws--sr-- 
+715  -rwx--xr-x   |  2715  -rwx--sr-x   |  4715  -rws--xr-x   |  6715  -rws--sr-x 
+716  -rwx--xrw-   |  2716  -rwx--srw-   |  4716  -rws--xrw-   |  6716  -rws--srw- 
+717  -rwx--xrwx   |  2717  -rwx--srwx   |  4717  -rws--xrwx   |  6717  -rws--srwx 
+720  -rwx-w----   |  2720  -rwx-wS---   |  4720  -rws-w----   |  6720  -rws-wS--- 
+721  -rwx-w---x   |  2721  -rwx-wS--x   |  4721  -rws-w---x   |  6721  -rws-wS--x 
+722  -rwx-w--w-   |  2722  -rwx-wS-w-   |  4722  -rws-w--w-   |  6722  -rws-wS-w- 
+723  -rwx-w--wx   |  2723  -rwx-wS-wx   |  4723  -rws-w--wx   |  6723  -rws-wS-wx 
+724  -rwx-w-r--   |  2724  -rwx-wSr--   |  4724  -rws-w-r--   |  6724  -rws-wSr-- 
+725  -rwx-w-r-x   |  2725  -rwx-wSr-x   |  4725  -rws-w-r-x   |  6725  -rws-wSr-x 
+726  -rwx-w-rw-   |  2726  -rwx-wSrw-   |  4726  -rws-w-rw-   |  6726  -rws-wSrw- 
+727  -rwx-w-rwx   |  2727  -rwx-wSrwx   |  4727  -rws-w-rwx   |  6727  -rws-wSrwx 
+730  -rwx-wx---   |  2730  -rwx-ws---   |  4730  -rws-wx---   |  6730  -rws-ws--- 
+731  -rwx-wx--x   |  2731  -rwx-ws--x   |  4731  -rws-wx--x   |  6731  -rws-ws--x 
+732  -rwx-wx-w-   |  2732  -rwx-ws-w-   |  4732  -rws-wx-w-   |  6732  -rws-ws-w- 
+733  -rwx-wx-wx   |  2733  -rwx-ws-wx   |  4733  -rws-wx-wx   |  6733  -rws-ws-wx 
+734  -rwx-wxr--   |  2734  -rwx-wsr--   |  4734  -rws-wxr--   |  6734  -rws-wsr-- 
+735  -rwx-wxr-x   |  2735  -rwx-wsr-x   |  4735  -rws-wxr-x   |  6735  -rws-wsr-x 
+736  -rwx-wxrw-   |  2736  -rwx-wsrw-   |  4736  -rws-wxrw-   |  6736  -rws-wsrw- 
+737  -rwx-wxrwx   |  2737  -rwx-wsrwx   |  4737  -rws-wxrwx   |  6737  -rws-wsrwx 
+740  -rwxr-----   |  2740  -rwxr-S---   |  4740  -rwsr-----   |  6740  -rwsr-S--- 
+741  -rwxr----x   |  2741  -rwxr-S--x   |  4741  -rwsr----x   |  6741  -rwsr-S--x 
+742  -rwxr---w-   |  2742  -rwxr-S-w-   |  4742  -rwsr---w-   |  6742  -rwsr-S-w- 
+743  -rwxr---wx   |  2743  -rwxr-S-wx   |  4743  -rwsr---wx   |  6743  -rwsr-S-wx 
+744  -rwxr--r--   |  2744  -rwxr-Sr--   |  4744  -rwsr--r--   |  6744  -rwsr-Sr-- 
+745  -rwxr--r-x   |  2745  -rwxr-Sr-x   |  4745  -rwsr--r-x   |  6745  -rwsr-Sr-x 
+746  -rwxr--rw-   |  2746  -rwxr-Srw-   |  4746  -rwsr--rw-   |  6746  -rwsr-Srw- 
+747  -rwxr--rwx   |  2747  -rwxr-Srwx   |  4747  -rwsr--rwx   |  6747  -rwsr-Srwx 
+750  -rwxr-x---   |  2750  -rwxr-s---   |  4750  -rwsr-x---   |  6750  -rwsr-s--- 
+751  -rwxr-x--x   |  2751  -rwxr-s--x   |  4751  -rwsr-x--x   |  6751  -rwsr-s--x 
+752  -rwxr-x-w-   |  2752  -rwxr-s-w-   |  4752  -rwsr-x-w-   |  6752  -rwsr-s-w- 
+753  -rwxr-x-wx   |  2753  -rwxr-s-wx   |  4753  -rwsr-x-wx   |  6753  -rwsr-s-wx 
+754  -rwxr-xr--   |  2754  -rwxr-sr--   |  4754  -rwsr-xr--   |  6754  -rwsr-sr-- 
+755  -rwxr-xr-x   |  2755  -rwxr-sr-x   |  4755  -rwsr-xr-x   |  6755  -rwsr-sr-x 
+756  -rwxr-xrw-   |  2756  -rwxr-srw-   |  4756  -rwsr-xrw-   |  6756  -rwsr-srw- 
+757  -rwxr-xrwx   |  2757  -rwxr-srwx   |  4757  -rwsr-xrwx   |  6757  -rwsr-srwx 
+760  -rwxrw----   |  2760  -rwxrwS---   |  4760  -rwsrw----   |  6760  -rwsrwS--- 
+761  -rwxrw---x   |  2761  -rwxrwS--x   |  4761  -rwsrw---x   |  6761  -rwsrwS--x 
+762  -rwxrw--w-   |  2762  -rwxrwS-w-   |  4762  -rwsrw--w-   |  6762  -rwsrwS-w- 
+763  -rwxrw--wx   |  2763  -rwxrwS-wx   |  4763  -rwsrw--wx   |  6763  -rwsrwS-wx 
+764  -rwxrw-r--   |  2764  -rwxrwSr--   |  4764  -rwsrw-r--   |  6764  -rwsrwSr-- 
+765  -rwxrw-r-x   |  2765  -rwxrwSr-x   |  4765  -rwsrw-r-x   |  6765  -rwsrwSr-x 
+766  -rwxrw-rw-   |  2766  -rwxrwSrw-   |  4766  -rwsrw-rw-   |  6766  -rwsrwSrw- 
+767  -rwxrw-rwx   |  2767  -rwxrwSrwx   |  4767  -rwsrw-rwx   |  6767  -rwsrwSrwx 
+770  -rwxrwx---   |  2770  -rwxrws---   |  4770  -rwsrwx---   |  6770  -rwsrws--- 
+771  -rwxrwx--x   |  2771  -rwxrws--x   |  4771  -rwsrwx--x   |  6771  -rwsrws--x 
+772  -rwxrwx-w-   |  2772  -rwxrws-w-   |  4772  -rwsrwx-w-   |  6772  -rwsrws-w- 
+773  -rwxrwx-wx   |  2773  -rwxrws-wx   |  4773  -rwsrwx-wx   |  6773  -rwsrws-wx 
+774  -rwxrwxr--   |  2774  -rwxrwsr--   |  4774  -rwsrwxr--   |  6774  -rwsrwsr-- 
+775  -rwxrwxr-x   |  2775  -rwxrwsr-x   |  4775  -rwsrwxr-x   |  6775  -rwsrwsr-x 
+776  -rwxrwxrw-   |  2776  -rwxrwsrw-   |  4776  -rwsrwxrw-   |  6776  -rwsrwsrw- 
+777  -rwxrwxrwx   |  2777  -rwxrwsrwx   |  4777  -rwsrwxrwx   |  6777  -rwsrwsrwx 
+1000  ---------T   |  3000  ------S--T   |  5000  ---S-----T   |  7000  ---S--S--T 
+1001  ---------t   |  3001  ------S--t   |  5001  ---S-----t   |  7001  ---S--S--t 
+1002  --------wT   |  3002  ------S-wT   |  5002  ---S----wT   |  7002  ---S--S-wT 
+1003  --------wt   |  3003  ------S-wt   |  5003  ---S----wt   |  7003  ---S--S-wt 
+1004  -------r-T   |  3004  ------Sr-T   |  5004  ---S---r-T   |  7004  ---S--Sr-T 
+1005  -------r-t   |  3005  ------Sr-t   |  5005  ---S---r-t   |  7005  ---S--Sr-t 
+1006  -------rwT   |  3006  ------SrwT   |  5006  ---S---rwT   |  7006  ---S--SrwT 
+1007  -------rwt   |  3007  ------Srwt   |  5007  ---S---rwt   |  7007  ---S--Srwt 
+1010  ------x--T   |  3010  ------s--T   |  5010  ---S--x--T   |  7010  ---S--s--T 
+1011  ------x--t   |  3011  ------s--t   |  5011  ---S--x--t   |  7011  ---S--s--t 
+1012  ------x-wT   |  3012  ------s-wT   |  5012  ---S--x-wT   |  7012  ---S--s-wT 
+1013  ------x-wt   |  3013  ------s-wt   |  5013  ---S--x-wt   |  7013  ---S--s-wt 
+1014  ------xr-T   |  3014  ------sr-T   |  5014  ---S--xr-T   |  7014  ---S--sr-T 
+1015  ------xr-t   |  3015  ------sr-t   |  5015  ---S--xr-t   |  7015  ---S--sr-t 
+1016  ------xrwT   |  3016  ------srwT   |  5016  ---S--xrwT   |  7016  ---S--srwT 
+1017  ------xrwt   |  3017  ------srwt   |  5017  ---S--xrwt   |  7017  ---S--srwt 
+1020  -----w---T   |  3020  -----wS--T   |  5020  ---S-w---T   |  7020  ---S-wS--T 
+1021  -----w---t   |  3021  -----wS--t   |  5021  ---S-w---t   |  7021  ---S-wS--t 
+1022  -----w--wT   |  3022  -----wS-wT   |  5022  ---S-w--wT   |  7022  ---S-wS-wT 
+1023  -----w--wt   |  3023  -----wS-wt   |  5023  ---S-w--wt   |  7023  ---S-wS-wt 
+1024  -----w-r-T   |  3024  -----wSr-T   |  5024  ---S-w-r-T   |  7024  ---S-wSr-T 
+1025  -----w-r-t   |  3025  -----wSr-t   |  5025  ---S-w-r-t   |  7025  ---S-wSr-t 
+1026  -----w-rwT   |  3026  -----wSrwT   |  5026  ---S-w-rwT   |  7026  ---S-wSrwT 
+1027  -----w-rwt   |  3027  -----wSrwt   |  5027  ---S-w-rwt   |  7027  ---S-wSrwt 
+1030  -----wx--T   |  3030  -----ws--T   |  5030  ---S-wx--T   |  7030  ---S-ws--T 
+1031  -----wx--t   |  3031  -----ws--t   |  5031  ---S-wx--t   |  7031  ---S-ws--t 
+1032  -----wx-wT   |  3032  -----ws-wT   |  5032  ---S-wx-wT   |  7032  ---S-ws-wT 
+1033  -----wx-wt   |  3033  -----ws-wt   |  5033  ---S-wx-wt   |  7033  ---S-ws-wt 
+1034  -----wxr-T   |  3034  -----wsr-T   |  5034  ---S-wxr-T   |  7034  ---S-wsr-T 
+1035  -----wxr-t   |  3035  -----wsr-t   |  5035  ---S-wxr-t   |  7035  ---S-wsr-t 
+1036  -----wxrwT   |  3036  -----wsrwT   |  5036  ---S-wxrwT   |  7036  ---S-wsrwT 
+1037  -----wxrwt   |  3037  -----wsrwt   |  5037  ---S-wxrwt   |  7037  ---S-wsrwt 
+1040  ----r----T   |  3040  ----r-S--T   |  5040  ---Sr----T   |  7040  ---Sr-S--T 
+1041  ----r----t   |  3041  ----r-S--t   |  5041  ---Sr----t   |  7041  ---Sr-S--t 
+1042  ----r---wT   |  3042  ----r-S-wT   |  5042  ---Sr---wT   |  7042  ---Sr-S-wT 
+1043  ----r---wt   |  3043  ----r-S-wt   |  5043  ---Sr---wt   |  7043  ---Sr-S-wt 
+1044  ----r--r-T   |  3044  ----r-Sr-T   |  5044  ---Sr--r-T   |  7044  ---Sr-Sr-T 
+1045  ----r--r-t   |  3045  ----r-Sr-t   |  5045  ---Sr--r-t   |  7045  ---Sr-Sr-t 
+1046  ----r--rwT   |  3046  ----r-SrwT   |  5046  ---Sr--rwT   |  7046  ---Sr-SrwT 
+1047  ----r--rwt   |  3047  ----r-Srwt   |  5047  ---Sr--rwt   |  7047  ---Sr-Srwt 
+1050  ----r-x--T   |  3050  ----r-s--T   |  5050  ---Sr-x--T   |  7050  ---Sr-s--T 
+1051  ----r-x--t   |  3051  ----r-s--t   |  5051  ---Sr-x--t   |  7051  ---Sr-s--t 
+1052  ----r-x-wT   |  3052  ----r-s-wT   |  5052  ---Sr-x-wT   |  7052  ---Sr-s-wT 
+1053  ----r-x-wt   |  3053  ----r-s-wt   |  5053  ---Sr-x-wt   |  7053  ---Sr-s-wt 
+1054  ----r-xr-T   |  3054  ----r-sr-T   |  5054  ---Sr-xr-T   |  7054  ---Sr-sr-T 
+1055  ----r-xr-t   |  3055  ----r-sr-t   |  5055  ---Sr-xr-t   |  7055  ---Sr-sr-t 
+1056  ----r-xrwT   |  3056  ----r-srwT   |  5056  ---Sr-xrwT   |  7056  ---Sr-srwT 
+1057  ----r-xrwt   |  3057  ----r-srwt   |  5057  ---Sr-xrwt   |  7057  ---Sr-srwt 
+1060  ----rw---T   |  3060  ----rwS--T   |  5060  ---Srw---T   |  7060  ---SrwS--T 
+1061  ----rw---t   |  3061  ----rwS--t   |  5061  ---Srw---t   |  7061  ---SrwS--t 
+1062  ----rw--wT   |  3062  ----rwS-wT   |  5062  ---Srw--wT   |  7062  ---SrwS-wT 
+1063  ----rw--wt   |  3063  ----rwS-wt   |  5063  ---Srw--wt   |  7063  ---SrwS-wt 
+1064  ----rw-r-T   |  3064  ----rwSr-T   |  5064  ---Srw-r-T   |  7064  ---SrwSr-T 
+1065  ----rw-r-t   |  3065  ----rwSr-t   |  5065  ---Srw-r-t   |  7065  ---SrwSr-t 
+1066  ----rw-rwT   |  3066  ----rwSrwT   |  5066  ---Srw-rwT   |  7066  ---SrwSrwT 
+1067  ----rw-rwt   |  3067  ----rwSrwt   |  5067  ---Srw-rwt   |  7067  ---SrwSrwt 
+1070  ----rwx--T   |  3070  ----rws--T   |  5070  ---Srwx--T   |  7070  ---Srws--T 
+1071  ----rwx--t   |  3071  ----rws--t   |  5071  ---Srwx--t   |  7071  ---Srws--t 
+1072  ----rwx-wT   |  3072  ----rws-wT   |  5072  ---Srwx-wT   |  7072  ---Srws-wT 
+1073  ----rwx-wt   |  3073  ----rws-wt   |  5073  ---Srwx-wt   |  7073  ---Srws-wt 
+1074  ----rwxr-T   |  3074  ----rwsr-T   |  5074  ---Srwxr-T   |  7074  ---Srwsr-T 
+1075  ----rwxr-t   |  3075  ----rwsr-t   |  5075  ---Srwxr-t   |  7075  ---Srwsr-t 
+1076  ----rwxrwT   |  3076  ----rwsrwT   |  5076  ---SrwxrwT   |  7076  ---SrwsrwT 
+1077  ----rwxrwt   |  3077  ----rwsrwt   |  5077  ---Srwxrwt   |  7077  ---Srwsrwt 
+1100  ---x-----T   |  3100  ---x--S--T   |  5100  ---s-----T   |  7100  ---s--S--T 
+1101  ---x-----t   |  3101  ---x--S--t   |  5101  ---s-----t   |  7101  ---s--S--t 
+1102  ---x----wT   |  3102  ---x--S-wT   |  5102  ---s----wT   |  7102  ---s--S-wT 
+1103  ---x----wt   |  3103  ---x--S-wt   |  5103  ---s----wt   |  7103  ---s--S-wt 
+1104  ---x---r-T   |  3104  ---x--Sr-T   |  5104  ---s---r-T   |  7104  ---s--Sr-T 
+1105  ---x---r-t   |  3105  ---x--Sr-t   |  5105  ---s---r-t   |  7105  ---s--Sr-t 
+1106  ---x---rwT   |  3106  ---x--SrwT   |  5106  ---s---rwT   |  7106  ---s--SrwT 
+1107  ---x---rwt   |  3107  ---x--Srwt   |  5107  ---s---rwt   |  7107  ---s--Srwt 
+1110  ---x--x--T   |  3110  ---x--s--T   |  5110  ---s--x--T   |  7110  ---s--s--T 
+1111  ---x--x--t   |  3111  ---x--s--t   |  5111  ---s--x--t   |  7111  ---s--s--t 
+1112  ---x--x-wT   |  3112  ---x--s-wT   |  5112  ---s--x-wT   |  7112  ---s--s-wT 
+1113  ---x--x-wt   |  3113  ---x--s-wt   |  5113  ---s--x-wt   |  7113  ---s--s-wt 
+1114  ---x--xr-T   |  3114  ---x--sr-T   |  5114  ---s--xr-T   |  7114  ---s--sr-T 
+1115  ---x--xr-t   |  3115  ---x--sr-t   |  5115  ---s--xr-t   |  7115  ---s--sr-t 
+1116  ---x--xrwT   |  3116  ---x--srwT   |  5116  ---s--xrwT   |  7116  ---s--srwT 
+1117  ---x--xrwt   |  3117  ---x--srwt   |  5117  ---s--xrwt   |  7117  ---s--srwt 
+1120  ---x-w---T   |  3120  ---x-wS--T   |  5120  ---s-w---T   |  7120  ---s-wS--T 
+1121  ---x-w---t   |  3121  ---x-wS--t   |  5121  ---s-w---t   |  7121  ---s-wS--t 
+1122  ---x-w--wT   |  3122  ---x-wS-wT   |  5122  ---s-w--wT   |  7122  ---s-wS-wT 
+1123  ---x-w--wt   |  3123  ---x-wS-wt   |  5123  ---s-w--wt   |  7123  ---s-wS-wt 
+1124  ---x-w-r-T   |  3124  ---x-wSr-T   |  5124  ---s-w-r-T   |  7124  ---s-wSr-T 
+1125  ---x-w-r-t   |  3125  ---x-wSr-t   |  5125  ---s-w-r-t   |  7125  ---s-wSr-t 
+1126  ---x-w-rwT   |  3126  ---x-wSrwT   |  5126  ---s-w-rwT   |  7126  ---s-wSrwT 
+1127  ---x-w-rwt   |  3127  ---x-wSrwt   |  5127  ---s-w-rwt   |  7127  ---s-wSrwt 
+1130  ---x-wx--T   |  3130  ---x-ws--T   |  5130  ---s-wx--T   |  7130  ---s-ws--T 
+1131  ---x-wx--t   |  3131  ---x-ws--t   |  5131  ---s-wx--t   |  7131  ---s-ws--t 
+1132  ---x-wx-wT   |  3132  ---x-ws-wT   |  5132  ---s-wx-wT   |  7132  ---s-ws-wT 
+1133  ---x-wx-wt   |  3133  ---x-ws-wt   |  5133  ---s-wx-wt   |  7133  ---s-ws-wt 
+1134  ---x-wxr-T   |  3134  ---x-wsr-T   |  5134  ---s-wxr-T   |  7134  ---s-wsr-T 
+1135  ---x-wxr-t   |  3135  ---x-wsr-t   |  5135  ---s-wxr-t   |  7135  ---s-wsr-t 
+1136  ---x-wxrwT   |  3136  ---x-wsrwT   |  5136  ---s-wxrwT   |  7136  ---s-wsrwT 
+1137  ---x-wxrwt   |  3137  ---x-wsrwt   |  5137  ---s-wxrwt   |  7137  ---s-wsrwt 
+1140  ---xr----T   |  3140  ---xr-S--T   |  5140  ---sr----T   |  7140  ---sr-S--T 
+1141  ---xr----t   |  3141  ---xr-S--t   |  5141  ---sr----t   |  7141  ---sr-S--t 
+1142  ---xr---wT   |  3142  ---xr-S-wT   |  5142  ---sr---wT   |  7142  ---sr-S-wT 
+1143  ---xr---wt   |  3143  ---xr-S-wt   |  5143  ---sr---wt   |  7143  ---sr-S-wt 
+1144  ---xr--r-T   |  3144  ---xr-Sr-T   |  5144  ---sr--r-T   |  7144  ---sr-Sr-T 
+1145  ---xr--r-t   |  3145  ---xr-Sr-t   |  5145  ---sr--r-t   |  7145  ---sr-Sr-t 
+1146  ---xr--rwT   |  3146  ---xr-SrwT   |  5146  ---sr--rwT   |  7146  ---sr-SrwT 
+1147  ---xr--rwt   |  3147  ---xr-Srwt   |  5147  ---sr--rwt   |  7147  ---sr-Srwt 
+1150  ---xr-x--T   |  3150  ---xr-s--T   |  5150  ---sr-x--T   |  7150  ---sr-s--T 
+1151  ---xr-x--t   |  3151  ---xr-s--t   |  5151  ---sr-x--t   |  7151  ---sr-s--t 
+1152  ---xr-x-wT   |  3152  ---xr-s-wT   |  5152  ---sr-x-wT   |  7152  ---sr-s-wT 
+1153  ---xr-x-wt   |  3153  ---xr-s-wt   |  5153  ---sr-x-wt   |  7153  ---sr-s-wt 
+1154  ---xr-xr-T   |  3154  ---xr-sr-T   |  5154  ---sr-xr-T   |  7154  ---sr-sr-T 
+1155  ---xr-xr-t   |  3155  ---xr-sr-t   |  5155  ---sr-xr-t   |  7155  ---sr-sr-t 
+1156  ---xr-xrwT   |  3156  ---xr-srwT   |  5156  ---sr-xrwT   |  7156  ---sr-srwT 
+1157  ---xr-xrwt   |  3157  ---xr-srwt   |  5157  ---sr-xrwt   |  7157  ---sr-srwt 
+1160  ---xrw---T   |  3160  ---xrwS--T   |  5160  ---srw---T   |  7160  ---srwS--T 
+1161  ---xrw---t   |  3161  ---xrwS--t   |  5161  ---srw---t   |  7161  ---srwS--t 
+1162  ---xrw--wT   |  3162  ---xrwS-wT   |  5162  ---srw--wT   |  7162  ---srwS-wT 
+1163  ---xrw--wt   |  3163  ---xrwS-wt   |  5163  ---srw--wt   |  7163  ---srwS-wt 
+1164  ---xrw-r-T   |  3164  ---xrwSr-T   |  5164  ---srw-r-T   |  7164  ---srwSr-T 
+1165  ---xrw-r-t   |  3165  ---xrwSr-t   |  5165  ---srw-r-t   |  7165  ---srwSr-t 
+1166  ---xrw-rwT   |  3166  ---xrwSrwT   |  5166  ---srw-rwT   |  7166  ---srwSrwT 
+1167  ---xrw-rwt   |  3167  ---xrwSrwt   |  5167  ---srw-rwt   |  7167  ---srwSrwt 
+1170  ---xrwx--T   |  3170  ---xrws--T   |  5170  ---srwx--T   |  7170  ---srws--T 
+1171  ---xrwx--t   |  3171  ---xrws--t   |  5171  ---srwx--t   |  7171  ---srws--t 
+1172  ---xrwx-wT   |  3172  ---xrws-wT   |  5172  ---srwx-wT   |  7172  ---srws-wT 
+1173  ---xrwx-wt   |  3173  ---xrws-wt   |  5173  ---srwx-wt   |  7173  ---srws-wt 
+1174  ---xrwxr-T   |  3174  ---xrwsr-T   |  5174  ---srwxr-T   |  7174  ---srwsr-T 
+1175  ---xrwxr-t   |  3175  ---xrwsr-t   |  5175  ---srwxr-t   |  7175  ---srwsr-t 
+1176  ---xrwxrwT   |  3176  ---xrwsrwT   |  5176  ---srwxrwT   |  7176  ---srwsrwT 
+1177  ---xrwxrwt   |  3177  ---xrwsrwt   |  5177  ---srwxrwt   |  7177  ---srwsrwt 
+1200  --w------T   |  3200  --w---S--T   |  5200  --wS-----T   |  7200  --wS--S--T 
+1201  --w------t   |  3201  --w---S--t   |  5201  --wS-----t   |  7201  --wS--S--t 
+1202  --w-----wT   |  3202  --w---S-wT   |  5202  --wS----wT   |  7202  --wS--S-wT 
+1203  --w-----wt   |  3203  --w---S-wt   |  5203  --wS----wt   |  7203  --wS--S-wt 
+1204  --w----r-T   |  3204  --w---Sr-T   |  5204  --wS---r-T   |  7204  --wS--Sr-T 
+1205  --w----r-t   |  3205  --w---Sr-t   |  5205  --wS---r-t   |  7205  --wS--Sr-t 
+1206  --w----rwT   |  3206  --w---SrwT   |  5206  --wS---rwT   |  7206  --wS--SrwT 
+1207  --w----rwt   |  3207  --w---Srwt   |  5207  --wS---rwt   |  7207  --wS--Srwt 
+1210  --w---x--T   |  3210  --w---s--T   |  5210  --wS--x--T   |  7210  --wS--s--T 
+1211  --w---x--t   |  3211  --w---s--t   |  5211  --wS--x--t   |  7211  --wS--s--t 
+1212  --w---x-wT   |  3212  --w---s-wT   |  5212  --wS--x-wT   |  7212  --wS--s-wT 
+1213  --w---x-wt   |  3213  --w---s-wt   |  5213  --wS--x-wt   |  7213  --wS--s-wt 
+1214  --w---xr-T   |  3214  --w---sr-T   |  5214  --wS--xr-T   |  7214  --wS--sr-T 
+1215  --w---xr-t   |  3215  --w---sr-t   |  5215  --wS--xr-t   |  7215  --wS--sr-t 
+1216  --w---xrwT   |  3216  --w---srwT   |  5216  --wS--xrwT   |  7216  --wS--srwT 
+1217  --w---xrwt   |  3217  --w---srwt   |  5217  --wS--xrwt   |  7217  --wS--srwt 
+1220  --w--w---T   |  3220  --w--wS--T   |  5220  --wS-w---T   |  7220  --wS-wS--T 
+1221  --w--w---t   |  3221  --w--wS--t   |  5221  --wS-w---t   |  7221  --wS-wS--t 
+1222  --w--w--wT   |  3222  --w--wS-wT   |  5222  --wS-w--wT   |  7222  --wS-wS-wT 
+1223  --w--w--wt   |  3223  --w--wS-wt   |  5223  --wS-w--wt   |  7223  --wS-wS-wt 
+1224  --w--w-r-T   |  3224  --w--wSr-T   |  5224  --wS-w-r-T   |  7224  --wS-wSr-T 
+1225  --w--w-r-t   |  3225  --w--wSr-t   |  5225  --wS-w-r-t   |  7225  --wS-wSr-t 
+1226  --w--w-rwT   |  3226  --w--wSrwT   |  5226  --wS-w-rwT   |  7226  --wS-wSrwT 
+1227  --w--w-rwt   |  3227  --w--wSrwt   |  5227  --wS-w-rwt   |  7227  --wS-wSrwt 
+1230  --w--wx--T   |  3230  --w--ws--T   |  5230  --wS-wx--T   |  7230  --wS-ws--T 
+1231  --w--wx--t   |  3231  --w--ws--t   |  5231  --wS-wx--t   |  7231  --wS-ws--t 
+1232  --w--wx-wT   |  3232  --w--ws-wT   |  5232  --wS-wx-wT   |  7232  --wS-ws-wT 
+1233  --w--wx-wt   |  3233  --w--ws-wt   |  5233  --wS-wx-wt   |  7233  --wS-ws-wt 
+1234  --w--wxr-T   |  3234  --w--wsr-T   |  5234  --wS-wxr-T   |  7234  --wS-wsr-T 
+1235  --w--wxr-t   |  3235  --w--wsr-t   |  5235  --wS-wxr-t   |  7235  --wS-wsr-t 
+1236  --w--wxrwT   |  3236  --w--wsrwT   |  5236  --wS-wxrwT   |  7236  --wS-wsrwT 
+1237  --w--wxrwt   |  3237  --w--wsrwt   |  5237  --wS-wxrwt   |  7237  --wS-wsrwt 
+1240  --w-r----T   |  3240  --w-r-S--T   |  5240  --wSr----T   |  7240  --wSr-S--T 
+1241  --w-r----t   |  3241  --w-r-S--t   |  5241  --wSr----t   |  7241  --wSr-S--t 
+1242  --w-r---wT   |  3242  --w-r-S-wT   |  5242  --wSr---wT   |  7242  --wSr-S-wT 
+1243  --w-r---wt   |  3243  --w-r-S-wt   |  5243  --wSr---wt   |  7243  --wSr-S-wt 
+1244  --w-r--r-T   |  3244  --w-r-Sr-T   |  5244  --wSr--r-T   |  7244  --wSr-Sr-T 
+1245  --w-r--r-t   |  3245  --w-r-Sr-t   |  5245  --wSr--r-t   |  7245  --wSr-Sr-t 
+1246  --w-r--rwT   |  3246  --w-r-SrwT   |  5246  --wSr--rwT   |  7246  --wSr-SrwT 
+1247  --w-r--rwt   |  3247  --w-r-Srwt   |  5247  --wSr--rwt   |  7247  --wSr-Srwt 
+1250  --w-r-x--T   |  3250  --w-r-s--T   |  5250  --wSr-x--T   |  7250  --wSr-s--T 
+1251  --w-r-x--t   |  3251  --w-r-s--t   |  5251  --wSr-x--t   |  7251  --wSr-s--t 
+1252  --w-r-x-wT   |  3252  --w-r-s-wT   |  5252  --wSr-x-wT   |  7252  --wSr-s-wT 
+1253  --w-r-x-wt   |  3253  --w-r-s-wt   |  5253  --wSr-x-wt   |  7253  --wSr-s-wt 
+1254  --w-r-xr-T   |  3254  --w-r-sr-T   |  5254  --wSr-xr-T   |  7254  --wSr-sr-T 
+1255  --w-r-xr-t   |  3255  --w-r-sr-t   |  5255  --wSr-xr-t   |  7255  --wSr-sr-t 
+1256  --w-r-xrwT   |  3256  --w-r-srwT   |  5256  --wSr-xrwT   |  7256  --wSr-srwT 
+1257  --w-r-xrwt   |  3257  --w-r-srwt   |  5257  --wSr-xrwt   |  7257  --wSr-srwt 
+1260  --w-rw---T   |  3260  --w-rwS--T   |  5260  --wSrw---T   |  7260  --wSrwS--T 
+1261  --w-rw---t   |  3261  --w-rwS--t   |  5261  --wSrw---t   |  7261  --wSrwS--t 
+1262  --w-rw--wT   |  3262  --w-rwS-wT   |  5262  --wSrw--wT   |  7262  --wSrwS-wT 
+1263  --w-rw--wt   |  3263  --w-rwS-wt   |  5263  --wSrw--wt   |  7263  --wSrwS-wt 
+1264  --w-rw-r-T   |  3264  --w-rwSr-T   |  5264  --wSrw-r-T   |  7264  --wSrwSr-T 
+1265  --w-rw-r-t   |  3265  --w-rwSr-t   |  5265  --wSrw-r-t   |  7265  --wSrwSr-t 
+1266  --w-rw-rwT   |  3266  --w-rwSrwT   |  5266  --wSrw-rwT   |  7266  --wSrwSrwT 
+1267  --w-rw-rwt   |  3267  --w-rwSrwt   |  5267  --wSrw-rwt   |  7267  --wSrwSrwt 
+1270  --w-rwx--T   |  3270  --w-rws--T   |  5270  --wSrwx--T   |  7270  --wSrws--T 
+1271  --w-rwx--t   |  3271  --w-rws--t   |  5271  --wSrwx--t   |  7271  --wSrws--t 
+1272  --w-rwx-wT   |  3272  --w-rws-wT   |  5272  --wSrwx-wT   |  7272  --wSrws-wT 
+1273  --w-rwx-wt   |  3273  --w-rws-wt   |  5273  --wSrwx-wt   |  7273  --wSrws-wt 
+1274  --w-rwxr-T   |  3274  --w-rwsr-T   |  5274  --wSrwxr-T   |  7274  --wSrwsr-T 
+1275  --w-rwxr-t   |  3275  --w-rwsr-t   |  5275  --wSrwxr-t   |  7275  --wSrwsr-t 
+1276  --w-rwxrwT   |  3276  --w-rwsrwT   |  5276  --wSrwxrwT   |  7276  --wSrwsrwT 
+1277  --w-rwxrwt   |  3277  --w-rwsrwt   |  5277  --wSrwxrwt   |  7277  --wSrwsrwt 
+1300  --wx-----T   |  3300  --wx--S--T   |  5300  --ws-----T   |  7300  --ws--S--T 
+1301  --wx-----t   |  3301  --wx--S--t   |  5301  --ws-----t   |  7301  --ws--S--t 
+1302  --wx----wT   |  3302  --wx--S-wT   |  5302  --ws----wT   |  7302  --ws--S-wT 
+1303  --wx----wt   |  3303  --wx--S-wt   |  5303  --ws----wt   |  7303  --ws--S-wt 
+1304  --wx---r-T   |  3304  --wx--Sr-T   |  5304  --ws---r-T   |  7304  --ws--Sr-T 
+1305  --wx---r-t   |  3305  --wx--Sr-t   |  5305  --ws---r-t   |  7305  --ws--Sr-t 
+1306  --wx---rwT   |  3306  --wx--SrwT   |  5306  --ws---rwT   |  7306  --ws--SrwT 
+1307  --wx---rwt   |  3307  --wx--Srwt   |  5307  --ws---rwt   |  7307  --ws--Srwt 
+1310  --wx--x--T   |  3310  --wx--s--T   |  5310  --ws--x--T   |  7310  --ws--s--T 
+1311  --wx--x--t   |  3311  --wx--s--t   |  5311  --ws--x--t   |  7311  --ws--s--t 
+1312  --wx--x-wT   |  3312  --wx--s-wT   |  5312  --ws--x-wT   |  7312  --ws--s-wT 
+1313  --wx--x-wt   |  3313  --wx--s-wt   |  5313  --ws--x-wt   |  7313  --ws--s-wt 
+1314  --wx--xr-T   |  3314  --wx--sr-T   |  5314  --ws--xr-T   |  7314  --ws--sr-T 
+1315  --wx--xr-t   |  3315  --wx--sr-t   |  5315  --ws--xr-t   |  7315  --ws--sr-t 
+1316  --wx--xrwT   |  3316  --wx--srwT   |  5316  --ws--xrwT   |  7316  --ws--srwT 
+1317  --wx--xrwt   |  3317  --wx--srwt   |  5317  --ws--xrwt   |  7317  --ws--srwt 
+1320  --wx-w---T   |  3320  --wx-wS--T   |  5320  --ws-w---T   |  7320  --ws-wS--T 
+1321  --wx-w---t   |  3321  --wx-wS--t   |  5321  --ws-w---t   |  7321  --ws-wS--t 
+1322  --wx-w--wT   |  3322  --wx-wS-wT   |  5322  --ws-w--wT   |  7322  --ws-wS-wT 
+1323  --wx-w--wt   |  3323  --wx-wS-wt   |  5323  --ws-w--wt   |  7323  --ws-wS-wt 
+1324  --wx-w-r-T   |  3324  --wx-wSr-T   |  5324  --ws-w-r-T   |  7324  --ws-wSr-T 
+1325  --wx-w-r-t   |  3325  --wx-wSr-t   |  5325  --ws-w-r-t   |  7325  --ws-wSr-t 
+1326  --wx-w-rwT   |  3326  --wx-wSrwT   |  5326  --ws-w-rwT   |  7326  --ws-wSrwT 
+1327  --wx-w-rwt   |  3327  --wx-wSrwt   |  5327  --ws-w-rwt   |  7327  --ws-wSrwt 
+1330  --wx-wx--T   |  3330  --wx-ws--T   |  5330  --ws-wx--T   |  7330  --ws-ws--T 
+1331  --wx-wx--t   |  3331  --wx-ws--t   |  5331  --ws-wx--t   |  7331  --ws-ws--t 
+1332  --wx-wx-wT   |  3332  --wx-ws-wT   |  5332  --ws-wx-wT   |  7332  --ws-ws-wT 
+1333  --wx-wx-wt   |  3333  --wx-ws-wt   |  5333  --ws-wx-wt   |  7333  --ws-ws-wt 
+1334  --wx-wxr-T   |  3334  --wx-wsr-T   |  5334  --ws-wxr-T   |  7334  --ws-wsr-T 
+1335  --wx-wxr-t   |  3335  --wx-wsr-t   |  5335  --ws-wxr-t   |  7335  --ws-wsr-t 
+1336  --wx-wxrwT   |  3336  --wx-wsrwT   |  5336  --ws-wxrwT   |  7336  --ws-wsrwT 
+1337  --wx-wxrwt   |  3337  --wx-wsrwt   |  5337  --ws-wxrwt   |  7337  --ws-wsrwt 
+1340  --wxr----T   |  3340  --wxr-S--T   |  5340  --wsr----T   |  7340  --wsr-S--T 
+1341  --wxr----t   |  3341  --wxr-S--t   |  5341  --wsr----t   |  7341  --wsr-S--t 
+1342  --wxr---wT   |  3342  --wxr-S-wT   |  5342  --wsr---wT   |  7342  --wsr-S-wT 
+1343  --wxr---wt   |  3343  --wxr-S-wt   |  5343  --wsr---wt   |  7343  --wsr-S-wt 
+1344  --wxr--r-T   |  3344  --wxr-Sr-T   |  5344  --wsr--r-T   |  7344  --wsr-Sr-T 
+1345  --wxr--r-t   |  3345  --wxr-Sr-t   |  5345  --wsr--r-t   |  7345  --wsr-Sr-t 
+1346  --wxr--rwT   |  3346  --wxr-SrwT   |  5346  --wsr--rwT   |  7346  --wsr-SrwT 
+1347  --wxr--rwt   |  3347  --wxr-Srwt   |  5347  --wsr--rwt   |  7347  --wsr-Srwt 
+1350  --wxr-x--T   |  3350  --wxr-s--T   |  5350  --wsr-x--T   |  7350  --wsr-s--T 
+1351  --wxr-x--t   |  3351  --wxr-s--t   |  5351  --wsr-x--t   |  7351  --wsr-s--t 
+1352  --wxr-x-wT   |  3352  --wxr-s-wT   |  5352  --wsr-x-wT   |  7352  --wsr-s-wT 
+1353  --wxr-x-wt   |  3353  --wxr-s-wt   |  5353  --wsr-x-wt   |  7353  --wsr-s-wt 
+1354  --wxr-xr-T   |  3354  --wxr-sr-T   |  5354  --wsr-xr-T   |  7354  --wsr-sr-T 
+1355  --wxr-xr-t   |  3355  --wxr-sr-t   |  5355  --wsr-xr-t   |  7355  --wsr-sr-t 
+1356  --wxr-xrwT   |  3356  --wxr-srwT   |  5356  --wsr-xrwT   |  7356  --wsr-srwT 
+1357  --wxr-xrwt   |  3357  --wxr-srwt   |  5357  --wsr-xrwt   |  7357  --wsr-srwt 
+1360  --wxrw---T   |  3360  --wxrwS--T   |  5360  --wsrw---T   |  7360  --wsrwS--T 
+1361  --wxrw---t   |  3361  --wxrwS--t   |  5361  --wsrw---t   |  7361  --wsrwS--t 
+1362  --wxrw--wT   |  3362  --wxrwS-wT   |  5362  --wsrw--wT   |  7362  --wsrwS-wT 
+1363  --wxrw--wt   |  3363  --wxrwS-wt   |  5363  --wsrw--wt   |  7363  --wsrwS-wt 
+1364  --wxrw-r-T   |  3364  --wxrwSr-T   |  5364  --wsrw-r-T   |  7364  --wsrwSr-T 
+1365  --wxrw-r-t   |  3365  --wxrwSr-t   |  5365  --wsrw-r-t   |  7365  --wsrwSr-t 
+1366  --wxrw-rwT   |  3366  --wxrwSrwT   |  5366  --wsrw-rwT   |  7366  --wsrwSrwT 
+1367  --wxrw-rwt   |  3367  --wxrwSrwt   |  5367  --wsrw-rwt   |  7367  --wsrwSrwt 
+1370  --wxrwx--T   |  3370  --wxrws--T   |  5370  --wsrwx--T   |  7370  --wsrws--T 
+1371  --wxrwx--t   |  3371  --wxrws--t   |  5371  --wsrwx--t   |  7371  --wsrws--t 
+1372  --wxrwx-wT   |  3372  --wxrws-wT   |  5372  --wsrwx-wT   |  7372  --wsrws-wT 
+1373  --wxrwx-wt   |  3373  --wxrws-wt   |  5373  --wsrwx-wt   |  7373  --wsrws-wt 
+1374  --wxrwxr-T   |  3374  --wxrwsr-T   |  5374  --wsrwxr-T   |  7374  --wsrwsr-T 
+1375  --wxrwxr-t   |  3375  --wxrwsr-t   |  5375  --wsrwxr-t   |  7375  --wsrwsr-t 
+1376  --wxrwxrwT   |  3376  --wxrwsrwT   |  5376  --wsrwxrwT   |  7376  --wsrwsrwT 
+1377  --wxrwxrwt   |  3377  --wxrwsrwt   |  5377  --wsrwxrwt   |  7377  --wsrwsrwt 
+1400  -r-------T   |  3400  -r----S--T   |  5400  -r-S-----T   |  7400  -r-S--S--T 
+1401  -r-------t   |  3401  -r----S--t   |  5401  -r-S-----t   |  7401  -r-S--S--t 
+1402  -r------wT   |  3402  -r----S-wT   |  5402  -r-S----wT   |  7402  -r-S--S-wT 
+1403  -r------wt   |  3403  -r----S-wt   |  5403  -r-S----wt   |  7403  -r-S--S-wt 
+1404  -r-----r-T   |  3404  -r----Sr-T   |  5404  -r-S---r-T   |  7404  -r-S--Sr-T 
+1405  -r-----r-t   |  3405  -r----Sr-t   |  5405  -r-S---r-t   |  7405  -r-S--Sr-t 
+1406  -r-----rwT   |  3406  -r----SrwT   |  5406  -r-S---rwT   |  7406  -r-S--SrwT 
+1407  -r-----rwt   |  3407  -r----Srwt   |  5407  -r-S---rwt   |  7407  -r-S--Srwt 
+1410  -r----x--T   |  3410  -r----s--T   |  5410  -r-S--x--T   |  7410  -r-S--s--T 
+1411  -r----x--t   |  3411  -r----s--t   |  5411  -r-S--x--t   |  7411  -r-S--s--t 
+1412  -r----x-wT   |  3412  -r----s-wT   |  5412  -r-S--x-wT   |  7412  -r-S--s-wT 
+1413  -r----x-wt   |  3413  -r----s-wt   |  5413  -r-S--x-wt   |  7413  -r-S--s-wt 
+1414  -r----xr-T   |  3414  -r----sr-T   |  5414  -r-S--xr-T   |  7414  -r-S--sr-T 
+1415  -r----xr-t   |  3415  -r----sr-t   |  5415  -r-S--xr-t   |  7415  -r-S--sr-t 
+1416  -r----xrwT   |  3416  -r----srwT   |  5416  -r-S--xrwT   |  7416  -r-S--srwT 
+1417  -r----xrwt   |  3417  -r----srwt   |  5417  -r-S--xrwt   |  7417  -r-S--srwt 
+1420  -r---w---T   |  3420  -r---wS--T   |  5420  -r-S-w---T   |  7420  -r-S-wS--T 
+1421  -r---w---t   |  3421  -r---wS--t   |  5421  -r-S-w---t   |  7421  -r-S-wS--t 
+1422  -r---w--wT   |  3422  -r---wS-wT   |  5422  -r-S-w--wT   |  7422  -r-S-wS-wT 
+1423  -r---w--wt   |  3423  -r---wS-wt   |  5423  -r-S-w--wt   |  7423  -r-S-wS-wt 
+1424  -r---w-r-T   |  3424  -r---wSr-T   |  5424  -r-S-w-r-T   |  7424  -r-S-wSr-T 
+1425  -r---w-r-t   |  3425  -r---wSr-t   |  5425  -r-S-w-r-t   |  7425  -r-S-wSr-t 
+1426  -r---w-rwT   |  3426  -r---wSrwT   |  5426  -r-S-w-rwT   |  7426  -r-S-wSrwT 
+1427  -r---w-rwt   |  3427  -r---wSrwt   |  5427  -r-S-w-rwt   |  7427  -r-S-wSrwt 
+1430  -r---wx--T   |  3430  -r---ws--T   |  5430  -r-S-wx--T   |  7430  -r-S-ws--T 
+1431  -r---wx--t   |  3431  -r---ws--t   |  5431  -r-S-wx--t   |  7431  -r-S-ws--t 
+1432  -r---wx-wT   |  3432  -r---ws-wT   |  5432  -r-S-wx-wT   |  7432  -r-S-ws-wT 
+1433  -r---wx-wt   |  3433  -r---ws-wt   |  5433  -r-S-wx-wt   |  7433  -r-S-ws-wt 
+1434  -r---wxr-T   |  3434  -r---wsr-T   |  5434  -r-S-wxr-T   |  7434  -r-S-wsr-T 
+1435  -r---wxr-t   |  3435  -r---wsr-t   |  5435  -r-S-wxr-t   |  7435  -r-S-wsr-t 
+1436  -r---wxrwT   |  3436  -r---wsrwT   |  5436  -r-S-wxrwT   |  7436  -r-S-wsrwT 
+1437  -r---wxrwt   |  3437  -r---wsrwt   |  5437  -r-S-wxrwt   |  7437  -r-S-wsrwt 
+1440  -r--r----T   |  3440  -r--r-S--T   |  5440  -r-Sr----T   |  7440  -r-Sr-S--T 
+1441  -r--r----t   |  3441  -r--r-S--t   |  5441  -r-Sr----t   |  7441  -r-Sr-S--t 
+1442  -r--r---wT   |  3442  -r--r-S-wT   |  5442  -r-Sr---wT   |  7442  -r-Sr-S-wT 
+1443  -r--r---wt   |  3443  -r--r-S-wt   |  5443  -r-Sr---wt   |  7443  -r-Sr-S-wt 
+1444  -r--r--r-T   |  3444  -r--r-Sr-T   |  5444  -r-Sr--r-T   |  7444  -r-Sr-Sr-T 
+1445  -r--r--r-t   |  3445  -r--r-Sr-t   |  5445  -r-Sr--r-t   |  7445  -r-Sr-Sr-t 
+1446  -r--r--rwT   |  3446  -r--r-SrwT   |  5446  -r-Sr--rwT   |  7446  -r-Sr-SrwT 
+1447  -r--r--rwt   |  3447  -r--r-Srwt   |  5447  -r-Sr--rwt   |  7447  -r-Sr-Srwt 
+1450  -r--r-x--T   |  3450  -r--r-s--T   |  5450  -r-Sr-x--T   |  7450  -r-Sr-s--T 
+1451  -r--r-x--t   |  3451  -r--r-s--t   |  5451  -r-Sr-x--t   |  7451  -r-Sr-s--t 
+1452  -r--r-x-wT   |  3452  -r--r-s-wT   |  5452  -r-Sr-x-wT   |  7452  -r-Sr-s-wT 
+1453  -r--r-x-wt   |  3453  -r--r-s-wt   |  5453  -r-Sr-x-wt   |  7453  -r-Sr-s-wt 
+1454  -r--r-xr-T   |  3454  -r--r-sr-T   |  5454  -r-Sr-xr-T   |  7454  -r-Sr-sr-T 
+1455  -r--r-xr-t   |  3455  -r--r-sr-t   |  5455  -r-Sr-xr-t   |  7455  -r-Sr-sr-t 
+1456  -r--r-xrwT   |  3456  -r--r-srwT   |  5456  -r-Sr-xrwT   |  7456  -r-Sr-srwT 
+1457  -r--r-xrwt   |  3457  -r--r-srwt   |  5457  -r-Sr-xrwt   |  7457  -r-Sr-srwt 
+1460  -r--rw---T   |  3460  -r--rwS--T   |  5460  -r-Srw---T   |  7460  -r-SrwS--T 
+1461  -r--rw---t   |  3461  -r--rwS--t   |  5461  -r-Srw---t   |  7461  -r-SrwS--t 
+1462  -r--rw--wT   |  3462  -r--rwS-wT   |  5462  -r-Srw--wT   |  7462  -r-SrwS-wT 
+1463  -r--rw--wt   |  3463  -r--rwS-wt   |  5463  -r-Srw--wt   |  7463  -r-SrwS-wt 
+1464  -r--rw-r-T   |  3464  -r--rwSr-T   |  5464  -r-Srw-r-T   |  7464  -r-SrwSr-T 
+1465  -r--rw-r-t   |  3465  -r--rwSr-t   |  5465  -r-Srw-r-t   |  7465  -r-SrwSr-t 
+1466  -r--rw-rwT   |  3466  -r--rwSrwT   |  5466  -r-Srw-rwT   |  7466  -r-SrwSrwT 
+1467  -r--rw-rwt   |  3467  -r--rwSrwt   |  5467  -r-Srw-rwt   |  7467  -r-SrwSrwt 
+1470  -r--rwx--T   |  3470  -r--rws--T   |  5470  -r-Srwx--T   |  7470  -r-Srws--T 
+1471  -r--rwx--t   |  3471  -r--rws--t   |  5471  -r-Srwx--t   |  7471  -r-Srws--t 
+1472  -r--rwx-wT   |  3472  -r--rws-wT   |  5472  -r-Srwx-wT   |  7472  -r-Srws-wT 
+1473  -r--rwx-wt   |  3473  -r--rws-wt   |  5473  -r-Srwx-wt   |  7473  -r-Srws-wt 
+1474  -r--rwxr-T   |  3474  -r--rwsr-T   |  5474  -r-Srwxr-T   |  7474  -r-Srwsr-T 
+1475  -r--rwxr-t   |  3475  -r--rwsr-t   |  5475  -r-Srwxr-t   |  7475  -r-Srwsr-t 
+1476  -r--rwxrwT   |  3476  -r--rwsrwT   |  5476  -r-SrwxrwT   |  7476  -r-SrwsrwT 
+1477  -r--rwxrwt   |  3477  -r--rwsrwt   |  5477  -r-Srwxrwt   |  7477  -r-Srwsrwt 
+1500  -r-x-----T   |  3500  -r-x--S--T   |  5500  -r-s-----T   |  7500  -r-s--S--T 
+1501  -r-x-----t   |  3501  -r-x--S--t   |  5501  -r-s-----t   |  7501  -r-s--S--t 
+1502  -r-x----wT   |  3502  -r-x--S-wT   |  5502  -r-s----wT   |  7502  -r-s--S-wT 
+1503  -r-x----wt   |  3503  -r-x--S-wt   |  5503  -r-s----wt   |  7503  -r-s--S-wt 
+1504  -r-x---r-T   |  3504  -r-x--Sr-T   |  5504  -r-s---r-T   |  7504  -r-s--Sr-T 
+1505  -r-x---r-t   |  3505  -r-x--Sr-t   |  5505  -r-s---r-t   |  7505  -r-s--Sr-t 
+1506  -r-x---rwT   |  3506  -r-x--SrwT   |  5506  -r-s---rwT   |  7506  -r-s--SrwT 
+1507  -r-x---rwt   |  3507  -r-x--Srwt   |  5507  -r-s---rwt   |  7507  -r-s--Srwt 
+1510  -r-x--x--T   |  3510  -r-x--s--T   |  5510  -r-s--x--T   |  7510  -r-s--s--T 
+1511  -r-x--x--t   |  3511  -r-x--s--t   |  5511  -r-s--x--t   |  7511  -r-s--s--t 
+1512  -r-x--x-wT   |  3512  -r-x--s-wT   |  5512  -r-s--x-wT   |  7512  -r-s--s-wT 
+1513  -r-x--x-wt   |  3513  -r-x--s-wt   |  5513  -r-s--x-wt   |  7513  -r-s--s-wt 
+1514  -r-x--xr-T   |  3514  -r-x--sr-T   |  5514  -r-s--xr-T   |  7514  -r-s--sr-T 
+1515  -r-x--xr-t   |  3515  -r-x--sr-t   |  5515  -r-s--xr-t   |  7515  -r-s--sr-t 
+1516  -r-x--xrwT   |  3516  -r-x--srwT   |  5516  -r-s--xrwT   |  7516  -r-s--srwT 
+1517  -r-x--xrwt   |  3517  -r-x--srwt   |  5517  -r-s--xrwt   |  7517  -r-s--srwt 
+1520  -r-x-w---T   |  3520  -r-x-wS--T   |  5520  -r-s-w---T   |  7520  -r-s-wS--T 
+1521  -r-x-w---t   |  3521  -r-x-wS--t   |  5521  -r-s-w---t   |  7521  -r-s-wS--t 
+1522  -r-x-w--wT   |  3522  -r-x-wS-wT   |  5522  -r-s-w--wT   |  7522  -r-s-wS-wT 
+1523  -r-x-w--wt   |  3523  -r-x-wS-wt   |  5523  -r-s-w--wt   |  7523  -r-s-wS-wt 
+1524  -r-x-w-r-T   |  3524  -r-x-wSr-T   |  5524  -r-s-w-r-T   |  7524  -r-s-wSr-T 
+1525  -r-x-w-r-t   |  3525  -r-x-wSr-t   |  5525  -r-s-w-r-t   |  7525  -r-s-wSr-t 
+1526  -r-x-w-rwT   |  3526  -r-x-wSrwT   |  5526  -r-s-w-rwT   |  7526  -r-s-wSrwT 
+1527  -r-x-w-rwt   |  3527  -r-x-wSrwt   |  5527  -r-s-w-rwt   |  7527  -r-s-wSrwt 
+1530  -r-x-wx--T   |  3530  -r-x-ws--T   |  5530  -r-s-wx--T   |  7530  -r-s-ws--T 
+1531  -r-x-wx--t   |  3531  -r-x-ws--t   |  5531  -r-s-wx--t   |  7531  -r-s-ws--t 
+1532  -r-x-wx-wT   |  3532  -r-x-ws-wT   |  5532  -r-s-wx-wT   |  7532  -r-s-ws-wT 
+1533  -r-x-wx-wt   |  3533  -r-x-ws-wt   |  5533  -r-s-wx-wt   |  7533  -r-s-ws-wt 
+1534  -r-x-wxr-T   |  3534  -r-x-wsr-T   |  5534  -r-s-wxr-T   |  7534  -r-s-wsr-T 
+1535  -r-x-wxr-t   |  3535  -r-x-wsr-t   |  5535  -r-s-wxr-t   |  7535  -r-s-wsr-t 
+1536  -r-x-wxrwT   |  3536  -r-x-wsrwT   |  5536  -r-s-wxrwT   |  7536  -r-s-wsrwT 
+1537  -r-x-wxrwt   |  3537  -r-x-wsrwt   |  5537  -r-s-wxrwt   |  7537  -r-s-wsrwt 
+1540  -r-xr----T   |  3540  -r-xr-S--T   |  5540  -r-sr----T   |  7540  -r-sr-S--T 
+1541  -r-xr----t   |  3541  -r-xr-S--t   |  5541  -r-sr----t   |  7541  -r-sr-S--t 
+1542  -r-xr---wT   |  3542  -r-xr-S-wT   |  5542  -r-sr---wT   |  7542  -r-sr-S-wT 
+1543  -r-xr---wt   |  3543  -r-xr-S-wt   |  5543  -r-sr---wt   |  7543  -r-sr-S-wt 
+1544  -r-xr--r-T   |  3544  -r-xr-Sr-T   |  5544  -r-sr--r-T   |  7544  -r-sr-Sr-T 
+1545  -r-xr--r-t   |  3545  -r-xr-Sr-t   |  5545  -r-sr--r-t   |  7545  -r-sr-Sr-t 
+1546  -r-xr--rwT   |  3546  -r-xr-SrwT   |  5546  -r-sr--rwT   |  7546  -r-sr-SrwT 
+1547  -r-xr--rwt   |  3547  -r-xr-Srwt   |  5547  -r-sr--rwt   |  7547  -r-sr-Srwt 
+1550  -r-xr-x--T   |  3550  -r-xr-s--T   |  5550  -r-sr-x--T   |  7550  -r-sr-s--T 
+1551  -r-xr-x--t   |  3551  -r-xr-s--t   |  5551  -r-sr-x--t   |  7551  -r-sr-s--t 
+1552  -r-xr-x-wT   |  3552  -r-xr-s-wT   |  5552  -r-sr-x-wT   |  7552  -r-sr-s-wT 
+1553  -r-xr-x-wt   |  3553  -r-xr-s-wt   |  5553  -r-sr-x-wt   |  7553  -r-sr-s-wt 
+1554  -r-xr-xr-T   |  3554  -r-xr-sr-T   |  5554  -r-sr-xr-T   |  7554  -r-sr-sr-T 
+1555  -r-xr-xr-t   |  3555  -r-xr-sr-t   |  5555  -r-sr-xr-t   |  7555  -r-sr-sr-t 
+1556  -r-xr-xrwT   |  3556  -r-xr-srwT   |  5556  -r-sr-xrwT   |  7556  -r-sr-srwT 
+1557  -r-xr-xrwt   |  3557  -r-xr-srwt   |  5557  -r-sr-xrwt   |  7557  -r-sr-srwt 
+1560  -r-xrw---T   |  3560  -r-xrwS--T   |  5560  -r-srw---T   |  7560  -r-srwS--T 
+1561  -r-xrw---t   |  3561  -r-xrwS--t   |  5561  -r-srw---t   |  7561  -r-srwS--t 
+1562  -r-xrw--wT   |  3562  -r-xrwS-wT   |  5562  -r-srw--wT   |  7562  -r-srwS-wT 
+1563  -r-xrw--wt   |  3563  -r-xrwS-wt   |  5563  -r-srw--wt   |  7563  -r-srwS-wt 
+1564  -r-xrw-r-T   |  3564  -r-xrwSr-T   |  5564  -r-srw-r-T   |  7564  -r-srwSr-T 
+1565  -r-xrw-r-t   |  3565  -r-xrwSr-t   |  5565  -r-srw-r-t   |  7565  -r-srwSr-t 
+1566  -r-xrw-rwT   |  3566  -r-xrwSrwT   |  5566  -r-srw-rwT   |  7566  -r-srwSrwT 
+1567  -r-xrw-rwt   |  3567  -r-xrwSrwt   |  5567  -r-srw-rwt   |  7567  -r-srwSrwt 
+1570  -r-xrwx--T   |  3570  -r-xrws--T   |  5570  -r-srwx--T   |  7570  -r-srws--T 
+1571  -r-xrwx--t   |  3571  -r-xrws--t   |  5571  -r-srwx--t   |  7571  -r-srws--t 
+1572  -r-xrwx-wT   |  3572  -r-xrws-wT   |  5572  -r-srwx-wT   |  7572  -r-srws-wT 
+1573  -r-xrwx-wt   |  3573  -r-xrws-wt   |  5573  -r-srwx-wt   |  7573  -r-srws-wt 
+1574  -r-xrwxr-T   |  3574  -r-xrwsr-T   |  5574  -r-srwxr-T   |  7574  -r-srwsr-T 
+1575  -r-xrwxr-t   |  3575  -r-xrwsr-t   |  5575  -r-srwxr-t   |  7575  -r-srwsr-t 
+1576  -r-xrwxrwT   |  3576  -r-xrwsrwT   |  5576  -r-srwxrwT   |  7576  -r-srwsrwT 
+1577  -r-xrwxrwt   |  3577  -r-xrwsrwt   |  5577  -r-srwxrwt   |  7577  -r-srwsrwt 
+1600  -rw------T   |  3600  -rw---S--T   |  5600  -rwS-----T   |  7600  -rwS--S--T 
+1601  -rw------t   |  3601  -rw---S--t   |  5601  -rwS-----t   |  7601  -rwS--S--t 
+1602  -rw-----wT   |  3602  -rw---S-wT   |  5602  -rwS----wT   |  7602  -rwS--S-wT 
+1603  -rw-----wt   |  3603  -rw---S-wt   |  5603  -rwS----wt   |  7603  -rwS--S-wt 
+1604  -rw----r-T   |  3604  -rw---Sr-T   |  5604  -rwS---r-T   |  7604  -rwS--Sr-T 
+1605  -rw----r-t   |  3605  -rw---Sr-t   |  5605  -rwS---r-t   |  7605  -rwS--Sr-t 
+1606  -rw----rwT   |  3606  -rw---SrwT   |  5606  -rwS---rwT   |  7606  -rwS--SrwT 
+1607  -rw----rwt   |  3607  -rw---Srwt   |  5607  -rwS---rwt   |  7607  -rwS--Srwt 
+1610  -rw---x--T   |  3610  -rw---s--T   |  5610  -rwS--x--T   |  7610  -rwS--s--T 
+1611  -rw---x--t   |  3611  -rw---s--t   |  5611  -rwS--x--t   |  7611  -rwS--s--t 
+1612  -rw---x-wT   |  3612  -rw---s-wT   |  5612  -rwS--x-wT   |  7612  -rwS--s-wT 
+1613  -rw---x-wt   |  3613  -rw---s-wt   |  5613  -rwS--x-wt   |  7613  -rwS--s-wt 
+1614  -rw---xr-T   |  3614  -rw---sr-T   |  5614  -rwS--xr-T   |  7614  -rwS--sr-T 
+1615  -rw---xr-t   |  3615  -rw---sr-t   |  5615  -rwS--xr-t   |  7615  -rwS--sr-t 
+1616  -rw---xrwT   |  3616  -rw---srwT   |  5616  -rwS--xrwT   |  7616  -rwS--srwT 
+1617  -rw---xrwt   |  3617  -rw---srwt   |  5617  -rwS--xrwt   |  7617  -rwS--srwt 
+1620  -rw--w---T   |  3620  -rw--wS--T   |  5620  -rwS-w---T   |  7620  -rwS-wS--T 
+1621  -rw--w---t   |  3621  -rw--wS--t   |  5621  -rwS-w---t   |  7621  -rwS-wS--t 
+1622  -rw--w--wT   |  3622  -rw--wS-wT   |  5622  -rwS-w--wT   |  7622  -rwS-wS-wT 
+1623  -rw--w--wt   |  3623  -rw--wS-wt   |  5623  -rwS-w--wt   |  7623  -rwS-wS-wt 
+1624  -rw--w-r-T   |  3624  -rw--wSr-T   |  5624  -rwS-w-r-T   |  7624  -rwS-wSr-T 
+1625  -rw--w-r-t   |  3625  -rw--wSr-t   |  5625  -rwS-w-r-t   |  7625  -rwS-wSr-t 
+1626  -rw--w-rwT   |  3626  -rw--wSrwT   |  5626  -rwS-w-rwT   |  7626  -rwS-wSrwT 
+1627  -rw--w-rwt   |  3627  -rw--wSrwt   |  5627  -rwS-w-rwt   |  7627  -rwS-wSrwt 
+1630  -rw--wx--T   |  3630  -rw--ws--T   |  5630  -rwS-wx--T   |  7630  -rwS-ws--T 
+1631  -rw--wx--t   |  3631  -rw--ws--t   |  5631  -rwS-wx--t   |  7631  -rwS-ws--t 
+1632  -rw--wx-wT   |  3632  -rw--ws-wT   |  5632  -rwS-wx-wT   |  7632  -rwS-ws-wT 
+1633  -rw--wx-wt   |  3633  -rw--ws-wt   |  5633  -rwS-wx-wt   |  7633  -rwS-ws-wt 
+1634  -rw--wxr-T   |  3634  -rw--wsr-T   |  5634  -rwS-wxr-T   |  7634  -rwS-wsr-T 
+1635  -rw--wxr-t   |  3635  -rw--wsr-t   |  5635  -rwS-wxr-t   |  7635  -rwS-wsr-t 
+1636  -rw--wxrwT   |  3636  -rw--wsrwT   |  5636  -rwS-wxrwT   |  7636  -rwS-wsrwT 
+1637  -rw--wxrwt   |  3637  -rw--wsrwt   |  5637  -rwS-wxrwt   |  7637  -rwS-wsrwt 
+1640  -rw-r----T   |  3640  -rw-r-S--T   |  5640  -rwSr----T   |  7640  -rwSr-S--T 
+1641  -rw-r----t   |  3641  -rw-r-S--t   |  5641  -rwSr----t   |  7641  -rwSr-S--t 
+1642  -rw-r---wT   |  3642  -rw-r-S-wT   |  5642  -rwSr---wT   |  7642  -rwSr-S-wT 
+1643  -rw-r---wt   |  3643  -rw-r-S-wt   |  5643  -rwSr---wt   |  7643  -rwSr-S-wt 
+1644  -rw-r--r-T   |  3644  -rw-r-Sr-T   |  5644  -rwSr--r-T   |  7644  -rwSr-Sr-T 
+1645  -rw-r--r-t   |  3645  -rw-r-Sr-t   |  5645  -rwSr--r-t   |  7645  -rwSr-Sr-t 
+1646  -rw-r--rwT   |  3646  -rw-r-SrwT   |  5646  -rwSr--rwT   |  7646  -rwSr-SrwT 
+1647  -rw-r--rwt   |  3647  -rw-r-Srwt   |  5647  -rwSr--rwt   |  7647  -rwSr-Srwt 
+1650  -rw-r-x--T   |  3650  -rw-r-s--T   |  5650  -rwSr-x--T   |  7650  -rwSr-s--T 
+1651  -rw-r-x--t   |  3651  -rw-r-s--t   |  5651  -rwSr-x--t   |  7651  -rwSr-s--t 
+1652  -rw-r-x-wT   |  3652  -rw-r-s-wT   |  5652  -rwSr-x-wT   |  7652  -rwSr-s-wT 
+1653  -rw-r-x-wt   |  3653  -rw-r-s-wt   |  5653  -rwSr-x-wt   |  7653  -rwSr-s-wt 
+1654  -rw-r-xr-T   |  3654  -rw-r-sr-T   |  5654  -rwSr-xr-T   |  7654  -rwSr-sr-T 
+1655  -rw-r-xr-t   |  3655  -rw-r-sr-t   |  5655  -rwSr-xr-t   |  7655  -rwSr-sr-t 
+1656  -rw-r-xrwT   |  3656  -rw-r-srwT   |  5656  -rwSr-xrwT   |  7656  -rwSr-srwT 
+1657  -rw-r-xrwt   |  3657  -rw-r-srwt   |  5657  -rwSr-xrwt   |  7657  -rwSr-srwt 
+1660  -rw-rw---T   |  3660  -rw-rwS--T   |  5660  -rwSrw---T   |  7660  -rwSrwS--T 
+1661  -rw-rw---t   |  3661  -rw-rwS--t   |  5661  -rwSrw---t   |  7661  -rwSrwS--t 
+1662  -rw-rw--wT   |  3662  -rw-rwS-wT   |  5662  -rwSrw--wT   |  7662  -rwSrwS-wT 
+1663  -rw-rw--wt   |  3663  -rw-rwS-wt   |  5663  -rwSrw--wt   |  7663  -rwSrwS-wt 
+1664  -rw-rw-r-T   |  3664  -rw-rwSr-T   |  5664  -rwSrw-r-T   |  7664  -rwSrwSr-T 
+1665  -rw-rw-r-t   |  3665  -rw-rwSr-t   |  5665  -rwSrw-r-t   |  7665  -rwSrwSr-t 
+1666  -rw-rw-rwT   |  3666  -rw-rwSrwT   |  5666  -rwSrw-rwT   |  7666  -rwSrwSrwT 
+1667  -rw-rw-rwt   |  3667  -rw-rwSrwt   |  5667  -rwSrw-rwt   |  7667  -rwSrwSrwt 
+1670  -rw-rwx--T   |  3670  -rw-rws--T   |  5670  -rwSrwx--T   |  7670  -rwSrws--T 
+1671  -rw-rwx--t   |  3671  -rw-rws--t   |  5671  -rwSrwx--t   |  7671  -rwSrws--t 
+1672  -rw-rwx-wT   |  3672  -rw-rws-wT   |  5672  -rwSrwx-wT   |  7672  -rwSrws-wT 
+1673  -rw-rwx-wt   |  3673  -rw-rws-wt   |  5673  -rwSrwx-wt   |  7673  -rwSrws-wt 
+1674  -rw-rwxr-T   |  3674  -rw-rwsr-T   |  5674  -rwSrwxr-T   |  7674  -rwSrwsr-T 
+1675  -rw-rwxr-t   |  3675  -rw-rwsr-t   |  5675  -rwSrwxr-t   |  7675  -rwSrwsr-t 
+1676  -rw-rwxrwT   |  3676  -rw-rwsrwT   |  5676  -rwSrwxrwT   |  7676  -rwSrwsrwT 
+1677  -rw-rwxrwt   |  3677  -rw-rwsrwt   |  5677  -rwSrwxrwt   |  7677  -rwSrwsrwt 
+1700  -rwx-----T   |  3700  -rwx--S--T   |  5700  -rws-----T   |  7700  -rws--S--T 
+1701  -rwx-----t   |  3701  -rwx--S--t   |  5701  -rws-----t   |  7701  -rws--S--t 
+1702  -rwx----wT   |  3702  -rwx--S-wT   |  5702  -rws----wT   |  7702  -rws--S-wT 
+1703  -rwx----wt   |  3703  -rwx--S-wt   |  5703  -rws----wt   |  7703  -rws--S-wt 
+1704  -rwx---r-T   |  3704  -rwx--Sr-T   |  5704  -rws---r-T   |  7704  -rws--Sr-T 
+1705  -rwx---r-t   |  3705  -rwx--Sr-t   |  5705  -rws---r-t   |  7705  -rws--Sr-t 
+1706  -rwx---rwT   |  3706  -rwx--SrwT   |  5706  -rws---rwT   |  7706  -rws--SrwT 
+1707  -rwx---rwt   |  3707  -rwx--Srwt   |  5707  -rws---rwt   |  7707  -rws--Srwt 
+1710  -rwx--x--T   |  3710  -rwx--s--T   |  5710  -rws--x--T   |  7710  -rws--s--T 
+1711  -rwx--x--t   |  3711  -rwx--s--t   |  5711  -rws--x--t   |  7711  -rws--s--t 
+1712  -rwx--x-wT   |  3712  -rwx--s-wT   |  5712  -rws--x-wT   |  7712  -rws--s-wT 
+1713  -rwx--x-wt   |  3713  -rwx--s-wt   |  5713  -rws--x-wt   |  7713  -rws--s-wt 
+1714  -rwx--xr-T   |  3714  -rwx--sr-T   |  5714  -rws--xr-T   |  7714  -rws--sr-T 
+1715  -rwx--xr-t   |  3715  -rwx--sr-t   |  5715  -rws--xr-t   |  7715  -rws--sr-t 
+1716  -rwx--xrwT   |  3716  -rwx--srwT   |  5716  -rws--xrwT   |  7716  -rws--srwT 
+1717  -rwx--xrwt   |  3717  -rwx--srwt   |  5717  -rws--xrwt   |  7717  -rws--srwt 
+1720  -rwx-w---T   |  3720  -rwx-wS--T   |  5720  -rws-w---T   |  7720  -rws-wS--T 
+1721  -rwx-w---t   |  3721  -rwx-wS--t   |  5721  -rws-w---t   |  7721  -rws-wS--t 
+1722  -rwx-w--wT   |  3722  -rwx-wS-wT   |  5722  -rws-w--wT   |  7722  -rws-wS-wT 
+1723  -rwx-w--wt   |  3723  -rwx-wS-wt   |  5723  -rws-w--wt   |  7723  -rws-wS-wt 
+1724  -rwx-w-r-T   |  3724  -rwx-wSr-T   |  5724  -rws-w-r-T   |  7724  -rws-wSr-T 
+1725  -rwx-w-r-t   |  3725  -rwx-wSr-t   |  5725  -rws-w-r-t   |  7725  -rws-wSr-t 
+1726  -rwx-w-rwT   |  3726  -rwx-wSrwT   |  5726  -rws-w-rwT   |  7726  -rws-wSrwT 
+1727  -rwx-w-rwt   |  3727  -rwx-wSrwt   |  5727  -rws-w-rwt   |  7727  -rws-wSrwt 
+1730  -rwx-wx--T   |  3730  -rwx-ws--T   |  5730  -rws-wx--T   |  7730  -rws-ws--T 
+1731  -rwx-wx--t   |  3731  -rwx-ws--t   |  5731  -rws-wx--t   |  7731  -rws-ws--t 
+1732  -rwx-wx-wT   |  3732  -rwx-ws-wT   |  5732  -rws-wx-wT   |  7732  -rws-ws-wT 
+1733  -rwx-wx-wt   |  3733  -rwx-ws-wt   |  5733  -rws-wx-wt   |  7733  -rws-ws-wt 
+1734  -rwx-wxr-T   |  3734  -rwx-wsr-T   |  5734  -rws-wxr-T   |  7734  -rws-wsr-T 
+1735  -rwx-wxr-t   |  3735  -rwx-wsr-t   |  5735  -rws-wxr-t   |  7735  -rws-wsr-t 
+1736  -rwx-wxrwT   |  3736  -rwx-wsrwT   |  5736  -rws-wxrwT   |  7736  -rws-wsrwT 
+1737  -rwx-wxrwt   |  3737  -rwx-wsrwt   |  5737  -rws-wxrwt   |  7737  -rws-wsrwt 
+1740  -rwxr----T   |  3740  -rwxr-S--T   |  5740  -rwsr----T   |  7740  -rwsr-S--T 
+1741  -rwxr----t   |  3741  -rwxr-S--t   |  5741  -rwsr----t   |  7741  -rwsr-S--t 
+1742  -rwxr---wT   |  3742  -rwxr-S-wT   |  5742  -rwsr---wT   |  7742  -rwsr-S-wT 
+1743  -rwxr---wt   |  3743  -rwxr-S-wt   |  5743  -rwsr---wt   |  7743  -rwsr-S-wt 
+1744  -rwxr--r-T   |  3744  -rwxr-Sr-T   |  5744  -rwsr--r-T   |  7744  -rwsr-Sr-T 
+1745  -rwxr--r-t   |  3745  -rwxr-Sr-t   |  5745  -rwsr--r-t   |  7745  -rwsr-Sr-t 
+1746  -rwxr--rwT   |  3746  -rwxr-SrwT   |  5746  -rwsr--rwT   |  7746  -rwsr-SrwT 
+1747  -rwxr--rwt   |  3747  -rwxr-Srwt   |  5747  -rwsr--rwt   |  7747  -rwsr-Srwt 
+1750  -rwxr-x--T   |  3750  -rwxr-s--T   |  5750  -rwsr-x--T   |  7750  -rwsr-s--T 
+1751  -rwxr-x--t   |  3751  -rwxr-s--t   |  5751  -rwsr-x--t   |  7751  -rwsr-s--t 
+1752  -rwxr-x-wT   |  3752  -rwxr-s-wT   |  5752  -rwsr-x-wT   |  7752  -rwsr-s-wT 
+1753  -rwxr-x-wt   |  3753  -rwxr-s-wt   |  5753  -rwsr-x-wt   |  7753  -rwsr-s-wt 
+1754  -rwxr-xr-T   |  3754  -rwxr-sr-T   |  5754  -rwsr-xr-T   |  7754  -rwsr-sr-T 
+1755  -rwxr-xr-t   |  3755  -rwxr-sr-t   |  5755  -rwsr-xr-t   |  7755  -rwsr-sr-t 
+1756  -rwxr-xrwT   |  3756  -rwxr-srwT   |  5756  -rwsr-xrwT   |  7756  -rwsr-srwT 
+1757  -rwxr-xrwt   |  3757  -rwxr-srwt   |  5757  -rwsr-xrwt   |  7757  -rwsr-srwt 
+1760  -rwxrw---T   |  3760  -rwxrwS--T   |  5760  -rwsrw---T   |  7760  -rwsrwS--T 
+1761  -rwxrw---t   |  3761  -rwxrwS--t   |  5761  -rwsrw---t   |  7761  -rwsrwS--t 
+1762  -rwxrw--wT   |  3762  -rwxrwS-wT   |  5762  -rwsrw--wT   |  7762  -rwsrwS-wT 
+1763  -rwxrw--wt   |  3763  -rwxrwS-wt   |  5763  -rwsrw--wt   |  7763  -rwsrwS-wt 
+1764  -rwxrw-r-T   |  3764  -rwxrwSr-T   |  5764  -rwsrw-r-T   |  7764  -rwsrwSr-T 
+1765  -rwxrw-r-t   |  3765  -rwxrwSr-t   |  5765  -rwsrw-r-t   |  7765  -rwsrwSr-t 
+1766  -rwxrw-rwT   |  3766  -rwxrwSrwT   |  5766  -rwsrw-rwT   |  7766  -rwsrwSrwT 
+1767  -rwxrw-rwt   |  3767  -rwxrwSrwt   |  5767  -rwsrw-rwt   |  7767  -rwsrwSrwt 
+1770  -rwxrwx--T   |  3770  -rwxrws--T   |  5770  -rwsrwx--T   |  7770  -rwsrws--T 
+1771  -rwxrwx--t   |  3771  -rwxrws--t   |  5771  -rwsrwx--t   |  7771  -rwsrws--t 
+1772  -rwxrwx-wT   |  3772  -rwxrws-wT   |  5772  -rwsrwx-wT   |  7772  -rwsrws-wT 
+1773  -rwxrwx-wt   |  3773  -rwxrws-wt   |  5773  -rwsrwx-wt   |  7773  -rwsrws-wt 
+1774  -rwxrwxr-T   |  3774  -rwxrwsr-T   |  5774  -rwsrwxr-T   |  7774  -rwsrwsr-T 
+1775  -rwxrwxr-t   |  3775  -rwxrwsr-t   |  5775  -rwsrwxr-t   |  7775  -rwsrwsr-t 
+1776  -rwxrwxrwT   |  3776  -rwxrwsrwT   |  5776  -rwsrwxrwT   |  7776  -rwsrwsrwT 
+1777  -rwxrwxrwt   |  3777  -rwxrwsrwt   |  5777  -rwsrwxrwt   |   
+2000  ------S---   |  4000  ---S------   |  6000  ---S--S---   |   
+2001  ------S--x   |     |     |   
+2002  ------S-w-   |     |     |   
+  
+</pre>
+<!-- end content -->
+
+	</div><hr width="100%">
+
+
+
+
+
+</td>
+</tr>
+
+<tr>
+<td>
+		<br><br><a href="http://www.perpetualpc.net/index.html">Perpetual PC's home page</a><br>
+		<br><a href="http://www.perpetualpc.net/webpagelinks.html">Perpetual PC's link page</a><br>
+</td>
+</tr>
+</tbody></table>
+
+
+</body><div></div></html>
